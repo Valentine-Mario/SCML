@@ -1,37 +1,22 @@
-use regex::Regex;
-use std::collections::HashMap;
-
-
+mod html_processing;
+use crate::html_processing::process_html;
+use std::env;
+use std::process;
 
 fn main() {
-    let to_search = "
-[html val]<p>this is it</p>[html] [html stuff] <h1>hi there</h1><p>This is another stuff</p>[html]
-[html] in[val][html] [html] in[stuff] <p>hello world[html] [html]<p>hi[html]
-";
-    let re2= Regex::new(r"\[html (\w+)\](.+?)\[html\]").unwrap();
-    let mut html_id = HashMap::new();
+    let args = env::args();
+    let get_filename = process_html::Config::new(args).unwrap_or_else(|error| {
+        eprintln!("Problem parsing arguments: {}", error);
+        process::exit(1);
+    });
+    let file_content=process_html::read_file(&get_filename.filename).unwrap_or_else(|err| {
+        eprintln!("Problem reading file: {}", err);
+        process::exit(1)
+    });
+    let file_content=file_content.replace("\n", "");
+   let hash_value=process_html::generate_scml_hash(&file_content);
 
-
-    for val in re2.captures_iter(to_search){
-        html_id.insert(String::from(val.get(1).unwrap().as_str()), val.get(2).unwrap().as_str());
-    }
-
-    // for (key, value) in html_id {
-    //     let key=format!("in\\[{}\\]", key);
-    //     let re3=Regex::new(&key).unwrap();
-    //     let result= re3.replace_all(to_search, value);
-        
-    //     println!("{}", result);
-    // }
-
-    println!("{}", replace_variable(to_search, html_id))
+   let final_string=process_html::replace_variable(&file_content, hash_value);
+   println!("{}", final_string);
 }
 
-fn replace_variable(scml_string:&str, scml_hash:HashMap<String, &str>)->String{
-    let mut tmp=String::from(scml_string);
-    for (key, value) in scml_hash{
-        let key=format!("in[{}]", key);
-        tmp=tmp.replace(&key, value);
-    }
-    tmp
-}
