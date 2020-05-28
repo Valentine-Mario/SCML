@@ -1,4 +1,10 @@
-[html one]
+[html]
+<html>
+<title>title here</title>
+<body> in[two]
+[html]
+[html]
+[html one23]
 <p>this is a para</p>
 [html]
 
@@ -14,10 +20,17 @@
 [html]
 
 [html]
-in[one]
+in[one23]
+in[stuff]
 [html]
 
 [html]
 <span>hey</span>
 in[two]
+[html]
+[html stuff]<p>hey here</p>[html]
+
+[html]
+</body>
+</html>
 [html]
