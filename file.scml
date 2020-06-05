@@ -5,30 +5,40 @@
 [html]
 [html]
 [html one23]
-<p>this is a para</p>
+
+<p id="aaa"   append="here">this is a para</p>
+<textarea id="io" getValue=var2/>
 [html]
 
 [html four]
-<h1>hi</h1>
+<h1 id='id' append="hello">hi</h1>
+<button id="button" click={console.log("hello")}>
 [html]
 
 
 [html two]
 <h1>This is a header</h1>
 <h2>this is another header</h2>
-<p>hi there</p>
+<p id="here" append="here it is">hi there</p>
+<h2 id="kai" limit=30 class="hy">this is another header</h2>
+<p id="fine" append="here">this is a para</p>
+
 [html]
 
 [html]
 in[one23]
 in[stuff]
+<input id="some" disable=true/>
 [html]
 
 [html]
-<span>hey</span>
+<span id="span">hey</span>
+<div id="get_val" innerHTML=var1>this is text</div>
 in[two]
 [html]
-[html stuff]<p>hey here</p>[html]
+[html stuff]<p>hey here</p>
+<input id="form" getValue=var1>
+[html]
 
 [html]
 </body>
