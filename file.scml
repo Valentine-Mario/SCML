@@ -10,6 +10,8 @@
 <textarea id="io" getValue=var2/>
 <p id="hi" formatFloat>10000</p>
 <p id="sss" formatDate= mm/dd/yyyy>stuff</p>
+<p id="jjj" formatCurrency=" euro ">10000<p>
+
 [html]
 
 [html four]

@@ -2,34 +2,37 @@ pub mod process_js{
     use regex::Regex;
     pub fn process_innerhtml(value:&str)->Vec<String>{
         // append text <tag id="id here" append="append this text to tag">
-        let append_text=Regex::new(r#"<\w+?\s*?id=["|'](\w+)["|']\s*?append\s*?=\s*?["|'](.+?)["|'].*?>"#).unwrap();
+        let append_text=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?append\s*?=\s*?["|'](.+?)["|'].*?>"#).unwrap();
 
         //limit text size in tag <tag id="id" limit=100>
-        let limit_size= Regex::new(r#"<\w+?\s*?id=["|'](\w+)["|']\s*?limit\s*?=\s*?(\d{1,}).*?>"#).unwrap();
+        let limit_size= Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?limit\s*?=\s*?(\d{1,}).*?>"#).unwrap();
 
         //get inner html text in variable <tag id="id" innerHTML=variable>
-        let inner_html= Regex::new(r#"<\w+?\s*?id=["|'](\w+)["|']\s*?innerHTML\s*?=\s*?(\w+).*?>"#).unwrap();
+        let inner_html= Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?innerHTML\s*?=\s*?(\w+).*?>"#).unwrap();
 
         //get value from a form <tag id="id" getValue=variable>
-        let form_value=Regex::new(r#"<\w+?\s*?id=["|'](\w+)["|']\s*?getValue\s*?=\s*?(\w+).*?>"#).unwrap();
+        let form_value=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?getValue\s*?=\s*?(\w+).*?>"#).unwrap();
 
         //disable or enable input form <tag id="id" disable=true>
-        let form_disable=Regex::new(r#"<\w+?\s*?id=["|'](\w+)["|']\s*?disable\s*?=\s*?true.*?>"#).unwrap();
+        let form_disable=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?disable\s*?=\s*?true.*?>"#).unwrap();
 
         //click event <tag id="id" click={js expression}>
-        let events=Regex::new(r#"<\w+?\s*?id=["|'](\w+)["|']\s*?(\w+)\s*?=\s*?\{(.*?)\}.*?>"#).unwrap();
+        let events=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?(\w+)\s*?=\s*?\{(.*?)\}.*?>"#).unwrap();
 
         //format interger <tag id="id" formatInt>
-        let format_int=Regex::new(r#"<\w+?\s*?id=["|'](\w+)["|']\s*?formatInt.*?>"#).unwrap();
+        let format_int=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatInt.*?>"#).unwrap();
 
         //format float <tag id="id" formatFloat>
-        let format_float=Regex::new(r#"<\w+?\s*?id=["|'](\w+)["|']\s*?formatFloat.*?>"#).unwrap();
+        let format_float=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatFloat.*?>"#).unwrap();
 
         //visibility <tag id="id" visibility=value>
-        let visibility=Regex::new(r#"<\w+?\s*?id=["|'](\w+)["|']\s*?visibility\s*?=\s*?(\w+).*?>"#).unwrap();
+        let visibility=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?visibility\s*?=\s*?(\w+).*?>"#).unwrap();
 
         //format date <tag id="id", formatDate=dd/mm/yyyy>
-        let date_format=Regex::new(r#"<\w+?\s*?id=["|'](\w+)["|']\s*?formatDate\s*?=\s*?(\w+/\w+/\w+).*?>"#).unwrap();
+        let date_format=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatDate\s*?=\s*?(\w+/\w+/\w+).*?>"#).unwrap();
+
+        //format currency <tag id="id", formatCurrency="dollar">
+        let format_currency=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatCurrency\s*?=\s*?["|']\s*?(\w+)\s*?["|'].*?>"#).unwrap();
 
 
         //vector to store result
@@ -77,6 +80,32 @@ pub mod process_js{
 
         for val in format_float.captures_iter(value){
             js_vector.push(format!("document.getElementById(\"{}\").innerHTML= Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+        }
+
+        for val in format_currency.captures_iter(value){
+            match val.get(2).unwrap().as_str(){
+                "dollar"=>{
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='$'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+                },
+                "pounds"=>{
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='£'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+                },
+                "naira"=>{
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='₦'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+                },
+                "yen"=>{
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='¥'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+                },
+                "euro"=>{
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='€'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+                },
+                "franc"=>{
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='₣'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+                }
+                _=>{
+                    panic!("invalid currency {}. Valid currency include : dollar, pounds, naira, yen, euro, and franc", val.get(2).unwrap().as_str())
+                }
+            }
         }
 
         for val in visibility.captures_iter(value){
