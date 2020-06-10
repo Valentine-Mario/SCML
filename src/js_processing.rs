@@ -28,6 +28,9 @@ pub mod process_js{
         //visibility <tag id="id" visibility=value>
         let visibility=Regex::new(r#"<\w+?\s*?id=["|'](\w+)["|']\s*?visibility\s*?=\s*?(\w+).*?>"#).unwrap();
 
+        //format date <tag id="id", formatDate=dd/mm/yyyy>
+        let date_format=Regex::new(r#"<\w+?\s*?id=["|'](\w+)["|']\s*?formatDate\s*?=\s*?(\w+/\w+/\w+).*?>"#).unwrap();
+
 
         //vector to store result
         let mut js_vector=vec![];
@@ -83,6 +86,23 @@ pub mod process_js{
                 js_vector.push(format!("document.getElementById(\"{}\").style.visibility = \"{}\";", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()));
             }else {
                panic!("unrecognized expression {} valid options to use with visibility include: hidden, collapse, visible, initial, inherit", val.get(2).unwrap().as_str());
+            }
+        }
+
+        for val in date_format.captures_iter(value){
+            match val.get(2).unwrap().as_str(){
+                "dd/mm/yyyy"=>{
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()+'/'+new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1 +'/'+new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                },
+                "mm/dd/yyyy"=>{
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1 + new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()+'/'+new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                },
+                "yyyy/mm/dd"=>{
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()+ '/'+ new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1 + new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                },
+                _=>{
+                    panic!("invalid date format {} valid formats include: dd/mm/yyyy, mm/dd/yyyy, yyyy/mm/dd", val.get(2).unwrap().as_str());
+                }
             }
         }
         js_vector
