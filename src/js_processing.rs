@@ -31,6 +31,9 @@ pub mod process_js{
         //format date <tag id="id", formatDate=dd/mm/yyyy>
         let date_format=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatDate\s*?=\s*?(\w+/\w+/\w+).*?>"#).unwrap();
 
+        //format date to time ago <tag id="id" formatTimeAgo>
+        let time_age_format=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatTimeAgo.*?>"#).unwrap();
+
         //format currency <tag id="id", formatCurrency="dollar">
         let format_currency=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatCurrency\s*?=\s*?["|']\s*?(\w+)\s*?["|'].*?>"#).unwrap();
 
@@ -116,6 +119,40 @@ pub mod process_js{
             }else {
                panic!("unrecognized expression {} valid options to use with visibility include: hidden, collapse, visible, initial, inherit", val.get(2).unwrap().as_str());
             }
+        }
+
+        if time_age_format.is_match(value){
+            js_vector.push(format!("function timeAgo(date) {{
+
+                var seconds = Math.floor((new Date() - date) / 1000);
+              
+                var interval = Math.floor(seconds / 31536000);
+              
+                if (interval > 1) {{
+                  return interval + ' years ago';
+                }}
+                interval = Math.floor(seconds / 2592000);
+                if (interval > 1) {{
+                  return interval + ' months ago';
+                }}
+                interval = Math.floor(seconds / 86400);
+                if (interval > 1) {{
+                  return interval + ' days ago';
+                }}
+                interval = Math.floor(seconds / 3600);
+                if (interval > 1) {{
+                  return interval + ' hours ago';
+                }}
+                interval = Math.floor(seconds / 60);
+                if (interval > 1) {{
+                  return interval + ' minutes ago';
+                }}
+                return Math.floor(seconds) + ' seconds ago';
+              }}"))
+        }
+
+        for val in time_age_format.captures_iter(value){
+            js_vector.push(format!("document.getElementById('{}').innerHTML=timeAgo(new Date(document.getElementById('{}').innerHTML).getTime())", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
         }
 
         for val in date_format.captures_iter(value){

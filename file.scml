@@ -17,6 +17,9 @@
 [html four]
 <h1 id='id' append="hello">hi</h1>
 <button id="button" keydown =  {console.log("hello")}>
+<p id="timeago" formatTimeAgo>time here</p>
+<p id="timeago2" formatTimeAgo>time here</p>
+
 [html]
 
 
