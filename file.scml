@@ -17,8 +17,8 @@
 [html four]
 <h1 id='id' append="hello">hi</h1>
 <button id="button" keydown =  {console.log("hello")}>
-<p id="timeago" formatTimeAgo>time here</p>
-<p id="timeago2" formatTimeAgo>time here</p>
+<p id="timeago" >time here</p>
+<p id="timeago2">time here</p>
 
 [html]
 
@@ -29,7 +29,7 @@
 <p id="here" append="here it is">hi there</p>
 <h2 id="kai" limit=30 class="hy">this is another header</h2>
 <p id="fine" append="here">this is a para</p>
-
+<h2 id="round" repeat=23>hello</h2>
 [html]
 
 [html]

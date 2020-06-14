@@ -2,41 +2,43 @@ pub mod process_js{
     use regex::Regex;
     pub fn process_innerhtml(value:&str)->Vec<String>{
         // append text <tag id="id here" append="append this text to tag">
-        let append_text=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?append\s*?=\s*?["|'](.+?)["|'].*?>"#).unwrap();
+        let append_text=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?append\s*?=\s*?["|'](.+?)["|'].*?>"#).unwrap();
 
         //limit text size in tag <tag id="id" limit=100>
-        let limit_size= Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?limit\s*?=\s*?(\d{1,}).*?>"#).unwrap();
+        let limit_size= Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?limit\s*?=\s*?(\d{1,}).*?>"#).unwrap();
 
         //get inner html text in variable <tag id="id" innerHTML=variable>
-        let inner_html= Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?innerHTML\s*?=\s*?(\w+).*?>"#).unwrap();
+        let inner_html= Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?innerHTML\s*?=\s*?(\w+).*?>"#).unwrap();
 
         //get value from a form <tag id="id" getValue=variable>
-        let form_value=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?getValue\s*?=\s*?(\w+).*?>"#).unwrap();
+        let form_value=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?getValue\s*?=\s*?(\w+).*?>"#).unwrap();
 
         //disable or enable input form <tag id="id" disable=true>
-        let form_disable=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?disable\s*?=\s*?true.*?>"#).unwrap();
+        let form_disable=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?disable\s*?=\s*?true.*?>"#).unwrap();
 
         //click event <tag id="id" click={js expression}>
-        let events=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?(\w+)\s*?=\s*?\{(.*?)\}.*?>"#).unwrap();
+        let events=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?(\w+)\s*?=\s*?\{(.*?)\}.*?>"#).unwrap();
 
         //format interger <tag id="id" formatInt>
-        let format_int=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatInt.*?>"#).unwrap();
+        let format_int=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatInt.*?>"#).unwrap();
 
         //format float <tag id="id" formatFloat>
-        let format_float=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatFloat.*?>"#).unwrap();
+        let format_float=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatFloat.*?>"#).unwrap();
 
         //visibility <tag id="id" visibility=value>
-        let visibility=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?visibility\s*?=\s*?(\w+).*?>"#).unwrap();
+        let visibility=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?visibility\s*?=\s*?(\w+).*?>"#).unwrap();
 
         //format date <tag id="id", formatDate=dd/mm/yyyy>
-        let date_format=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatDate\s*?=\s*?(\w+/\w+/\w+).*?>"#).unwrap();
+        let date_format=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatDate\s*?=\s*?(\w+/\w+/\w+).*?>"#).unwrap();
 
         //format date to time ago <tag id="id" formatTimeAgo>
-        let time_age_format=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatTimeAgo.*?>"#).unwrap();
+        let time_age_format=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatTimeAgo.*?>"#).unwrap();
 
-        //format currency <tag id="id", formatCurrency="dollar">
-        let format_currency=Regex::new(r#"<\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatCurrency\s*?=\s*?["|']\s*?(\w+)\s*?["|'].*?>"#).unwrap();
+        //format currency <tag id="id" formatCurrency="dollar">
+        let format_currency=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatCurrency\s*?=\s*?["|']\s*?(\w+)\s*?["|'].*?>"#).unwrap();
 
+        //create multiple elements n times <tag id="id" repeat=23>
+        let create_element=Regex::new(r#"<\s*?(\w+)\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?repeat\s*?=\s*?(\d{1,}).*?>"#).unwrap();
 
         //vector to store result
         let mut js_vector=vec![];
@@ -170,6 +172,15 @@ pub mod process_js{
                     panic!("invalid date format {} valid formats include: dd/mm/yyyy, mm/dd/yyyy, yyyy/mm/dd", val.get(2).unwrap().as_str());
                 }
             }
+        }
+
+        for val in create_element.captures_iter(value){
+            js_vector.push(format!("for(var i = 0; i < {}; i += 1) {{
+                var element = document.createElement('{}');
+                element.id = '{}';
+                element.innerHTML = document.getElementById('{}').innerHTML;
+                document.body.appendChild(element);
+            }}", val.get(3).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(2).unwrap().as_str()))
         }
         js_vector
     }
