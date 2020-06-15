@@ -36,6 +36,7 @@
 in[one23]
 in[stuff]
 <input id="some" disable=true/>
+<p id="somenum" shortenNum>123456</p>
 [html]
 
 [html]
@@ -45,6 +46,7 @@ in[two]
 [html]
 [html stuff]<p>hey here</p>
 <input id="form" getValue=var1>
+<p id="verse" reverseString>a string here</p>
 [html]
 
 [html]

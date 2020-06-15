@@ -40,26 +40,32 @@ pub mod process_js{
         //create multiple elements n times <tag id="id" repeat=23>
         let create_element=Regex::new(r#"<\s*?(\w+)\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?repeat\s*?=\s*?(\d{1,}).*?>"#).unwrap();
 
+        //reverse the item in a tag <tag id="id" reverseString>
+        let reverse_element=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?reverseString.*?>"#).unwrap();
+
+        //shorten number from 1000 to 1K <tag id="id" shortenNum>
+        let number_shorter=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?shortenNum.*?>"#).unwrap();
+
         //vector to store result
         let mut js_vector=vec![];
         for val in append_text.captures_iter(value){
-        js_vector.push(format!("document.getElementById(\"{}\").innerHTML=\"{}\";", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()))
+        js_vector.push(format!("document.getElementById(\"{}\").innerHTML=\"{}\";\n", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()))
         }
 
         for val2 in limit_size.captures_iter(value){
-            js_vector.push(format!("document.getElementById(\"{}\").innerHTML= document.getElementById(\"{}\").innerHTML.substring(0, {});", val2.get(1).unwrap().as_str(), val2.get(1).unwrap().as_str(), val2.get(2).unwrap().as_str()))
+            js_vector.push(format!("document.getElementById(\"{}\").innerHTML= document.getElementById(\"{}\").innerHTML.substring(0, {});\n", val2.get(1).unwrap().as_str(), val2.get(1).unwrap().as_str(), val2.get(2).unwrap().as_str()))
         }
 
         for val in inner_html.captures_iter(value){
-            js_vector.push(format!("let {}= document.getElementById(\"{}\").innerHTML;", val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()));
+            js_vector.push(format!("let {}= document.getElementById(\"{}\").innerHTML;\n", val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()));
         }
 
         for val in form_value.captures_iter(value){
-            js_vector.push(format!("let {}=document.getElementById(\"{}\").value;", val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()));
+            js_vector.push(format!("let {}=document.getElementById(\"{}\").value;\n", val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()));
         }
 
         for val in form_disable.captures_iter(value){
-            js_vector.push(format!("document.getElementById(\"{}\").disable=true;", val.get(1).unwrap().as_str()));
+            js_vector.push(format!("document.getElementById(\"{}\").disable=true;\n", val.get(1).unwrap().as_str()));
         }
 
         for val in events.captures_iter(value){
@@ -73,39 +79,39 @@ pub mod process_js{
             val.get(2).unwrap().as_str()=="offline"||val.get(2).unwrap().as_str()=="online"||val.get(2).unwrap().as_str()=="pagehide"||val.get(2).unwrap().as_str()=="paste"||val.get(2).unwrap().as_str()=="pause"||val.get(2).unwrap().as_str()=="play"||
             val.get(2).unwrap().as_str()=="playing"||val.get(2).unwrap().as_str()=="scroll"||val.get(2).unwrap().as_str()=="search"||val.get(2).unwrap().as_str()=="seeking"||val.get(2).unwrap().as_str()=="seeked"||
             val.get(2).unwrap().as_str()=="select"||val.get(2).unwrap().as_str()=="volumechange"{
-                js_vector.push(format!("document.getElementById(\"{}\").addEventListener(\"{}\", ()=>{{\n{} }});", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(3).unwrap().as_str()));
+                js_vector.push(format!("document.getElementById(\"{}\").addEventListener(\"{}\", ()=>{{\n{} }});\n", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(3).unwrap().as_str()));
             }else{
                 panic!("unrecognized expression {} valid opions for event listeners include: click, abort, change, animationstart, canplay, copy, dbclick, drag, drop, fullscreenchange, hashchange, input, keydown, keypress, keyup, message, mousedown, mousemove, offline, online, pagehide, paste, pause, play, playing, scroll, search, seeking, seeked, select, volumechange ", val.get(2).unwrap().as_str()) ;
             }
         }
 
         for val in format_int.captures_iter(value){
-            js_vector.push(format!("document.getElementById(\"{}\").innerHTML= Intl.NumberFormat().format(parseInt(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+            js_vector.push(format!("document.getElementById(\"{}\").innerHTML= Intl.NumberFormat().format(parseInt(document.getElementById(\"{}\").innerHTML));\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
         }
 
         for val in format_float.captures_iter(value){
-            js_vector.push(format!("document.getElementById(\"{}\").innerHTML= Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+            js_vector.push(format!("document.getElementById(\"{}\").innerHTML= Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
         }
 
         for val in format_currency.captures_iter(value){
             match val.get(2).unwrap().as_str(){
                 "dollar"=>{
-                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='$'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='$'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
                 },
                 "pounds"=>{
-                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='£'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='£'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
                 },
                 "naira"=>{
-                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='₦'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='₦'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
                 },
                 "yen"=>{
-                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='¥'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='¥'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
                 },
                 "euro"=>{
-                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='€'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='€'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
                 },
                 "franc"=>{
-                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='₣'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML='₣'+ Intl.NumberFormat().format(parseFloat(document.getElementById(\"{}\").innerHTML));\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()));
                 }
                 _=>{
                     panic!("invalid currency {}. Valid currency include : dollar, pounds, naira, yen, euro, and franc", val.get(2).unwrap().as_str())
@@ -117,7 +123,7 @@ pub mod process_js{
             //permitted values include: hidden, collapse, visible, initial, inherit
             if val.get(2).unwrap().as_str()=="hidden" || val.get(2).unwrap().as_str()=="collapse"||val.get(2).unwrap().as_str()=="visible"||
             val.get(2).unwrap().as_str()=="initial"||val.get(2).unwrap().as_str()=="inherit"{
-                js_vector.push(format!("document.getElementById(\"{}\").style.visibility = \"{}\";", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()));
+                js_vector.push(format!("document.getElementById(\"{}\").style.visibility = \"{}\";\n", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()));
             }else {
                panic!("unrecognized expression {} valid options to use with visibility include: hidden, collapse, visible, initial, inherit", val.get(2).unwrap().as_str());
             }
@@ -150,23 +156,23 @@ pub mod process_js{
                   return interval + ' minutes ago';
                 }}
                 return Math.floor(seconds) + ' seconds ago';
-              }}"))
+              }}\n"))
         }
 
         for val in time_age_format.captures_iter(value){
-            js_vector.push(format!("document.getElementById('{}').innerHTML=timeAgo(new Date(document.getElementById('{}').innerHTML).getTime())", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+            js_vector.push(format!("document.getElementById('{}').innerHTML=timeAgo(new Date(document.getElementById('{}').innerHTML).getTime())\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
         }
 
         for val in date_format.captures_iter(value){
             match val.get(2).unwrap().as_str(){
                 "dd/mm/yyyy"=>{
-                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()+'/'+new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1 +'/'+new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()+'/'+new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1 +'/'+new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
                 },
                 "mm/dd/yyyy"=>{
-                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1 + new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()+'/'+new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1 + new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()+'/'+new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
                 },
                 "yyyy/mm/dd"=>{
-                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()+ '/'+ new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1 + new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()+ '/'+ new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1 + new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
                 },
                 _=>{
                     panic!("invalid date format {} valid formats include: dd/mm/yyyy, mm/dd/yyyy, yyyy/mm/dd", val.get(2).unwrap().as_str());
@@ -180,7 +186,31 @@ pub mod process_js{
                 element.id = '{}';
                 element.innerHTML = document.getElementById('{}').innerHTML;
                 document.body.appendChild(element);
-            }}", val.get(3).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(2).unwrap().as_str()))
+            }}\n", val.get(3).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(2).unwrap().as_str()))
+        }
+
+        for val in reverse_element.captures_iter(value){
+            js_vector.push(format!("document.getElementById('{}').innerHTML= document.getElementById('{}').innerHTML.split(' ').reverse().join(' ')\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+        }
+        if number_shorter.is_match(value){
+            js_vector.push(format!("function NumFormatter(num) {{
+                if(Math.abs(num) < 999){{
+                    return Math.sign(num)*Math.abs(num)
+                }}else if(Math.abs(num) > 999 && Math.abs(num) < 1000000){{
+                    return Math.sign(num)*((Math.abs(num)/1000).toFixed(2)) + 'k'
+                }}else if(Math.abs(num) > 999999 && Math.abs(num) < 1000000000)
+                {{
+                    return Math.sign(num)*((Math.abs(num)/1000000).toFixed(2)) + 'M'
+                }}else if(Math.abs(num) > 999999999 && Math.abs(num) < 1000000000000){{
+                    return Math.sign(num)*((Math.abs(num)/1000000000).toFixed(2)) + 'B'
+                }}else if(Math.abs(num) > 999999999999 && Math.abs(num) < 1000000000000000){{
+                    return Math.sign(num)*((Math.abs(num)/1000000000000).toFixed(2)) + 'T'
+                }}
+                }}"));
+            }
+
+        for val in number_shorter.captures_iter(value){
+            js_vector.push(format!("document.getElementById('{}').innerHTML=NumFormatter(parseInt(document.getElementById('{}').innerHTML))", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
         }
         js_vector
     }
