@@ -46,6 +46,12 @@ pub mod process_js{
         //shorten number from 1000 to 1K <tag id="id" shortenNum>
         let number_shorter=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?shortenNum.*?>"#).unwrap();
 
+        //write input to html tag onchange <tag id="id" onChange=id_to_write_to>
+        let write_to_tag=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?onChange=\s*?(\w+).*?>"#).unwrap();
+
+        //get all inputs in a form <tag id="id" getForm=id_of_form>
+        let form_inputs=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?getForm=\s*?(\w+).*?>"#).unwrap();
+
         //vector to store result
         let mut js_vector=vec![];
         for val in append_text.captures_iter(value){
@@ -211,6 +217,34 @@ pub mod process_js{
 
         for val in number_shorter.captures_iter(value){
             js_vector.push(format!("document.getElementById('{}').innerHTML=NumFormatter(parseInt(document.getElementById('{}').innerHTML))", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+        }
+
+        for val in write_to_tag.captures_iter(value){
+            js_vector.push(format!("document.getElementById('{}').addEventListener('input', (event)=>{{
+                document.getElementById('{}').innerHTML=event.target.value
+            }})", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()))
+        }
+
+        if form_inputs.is_match(value){
+            js_vector.push(format!("function getForm(form){{
+                var elements = document.getElementById(form).elements;
+                    var obj ={{}};
+                    for(var i = 0 ; i < elements.length ; i++){{
+                    var item = elements.item(i);
+                    obj[item.name] = item.value;
+                    if(obj[item.name]==''){{
+                       delete obj[item.name];
+                    }}
+                    }}	
+                return obj
+            }}"))
+        }
+
+        for val in form_inputs.captures_iter(value){
+            js_vector.push(format!("document.getElementById('{}').addEventListener('click', (event)=>{{
+                event.preventDefault();
+                console.log(getForm('{}'))
+            }})", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()))
         }
         js_vector
     }

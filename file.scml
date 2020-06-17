@@ -18,8 +18,8 @@
 <h1 id='id' append="hello">hi</h1>
 <button id="button" keydown =  {console.log("hello")}>
 <p id="timeago" >time here</p>
-<p id="timeago2">time here</p>
-
+<p id="timeago2" getForm= myform>time here</p>
+<p id="wrt" onChange= iop></p>
 [html]
 
 
