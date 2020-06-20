@@ -47,6 +47,8 @@ in[two]
 [html stuff]<p>hey here</p>
 <input id="form" getValue=var1>
 <p id="verse" reverseString>a string here</p>
+<a id="shr" shareDefault="reddit">link</a>
+<a id="shr2" shareCustome[www.google.com]="twitter">link2</a>
 [html]
 
 [html]

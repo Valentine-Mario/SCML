@@ -52,6 +52,13 @@ pub mod process_js{
         //get all inputs in a form <tag id="id" getForm=id_of_form>
         let form_inputs=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?getForm=\s*?(\w+).*?>"#).unwrap();
 
+        //share button with page url as default <tag id="id" shareDefault="facebook">
+        let share_link_default=Regex::new(r#"<\s*?a\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?shareDefault=\s*?["|']\s*?(\w+)\s*?["|'].*?>"#).unwrap();
+
+        //share button with custom url <tag id="id" shareCustome[url]="facebook">
+        let share_link_custom=Regex::new(r#"<\s*?a\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?shareCustome\s*?\[\s*?(.*?)\s*?\]\s*?=\s*?["|']\s*?(\w+)\s*?["|'].*?>"#).unwrap();
+
+
         //vector to store result
         let mut js_vector=vec![];
         for val in append_text.captures_iter(value){
@@ -212,17 +219,17 @@ pub mod process_js{
                 }}else if(Math.abs(num) > 999999999999 && Math.abs(num) < 1000000000000000){{
                     return Math.sign(num)*((Math.abs(num)/1000000000000).toFixed(2)) + 'T'
                 }}
-                }}"));
+                }}\n"));
             }
 
         for val in number_shorter.captures_iter(value){
-            js_vector.push(format!("document.getElementById('{}').innerHTML=NumFormatter(parseInt(document.getElementById('{}').innerHTML))", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+            js_vector.push(format!("document.getElementById('{}').innerHTML=NumFormatter(parseInt(document.getElementById('{}').innerHTML))\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
         }
 
         for val in write_to_tag.captures_iter(value){
             js_vector.push(format!("document.getElementById('{}').addEventListener('input', (event)=>{{
                 document.getElementById('{}').innerHTML=event.target.value
-            }})", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()))
+            }})\n", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()))
         }
 
         if form_inputs.is_match(value){
@@ -237,14 +244,94 @@ pub mod process_js{
                     }}
                     }}	
                 return obj
-            }}"))
+            }}\n"))
         }
 
         for val in form_inputs.captures_iter(value){
             js_vector.push(format!("document.getElementById('{}').addEventListener('click', (event)=>{{
                 event.preventDefault();
                 console.log(getForm('{}'))
-            }})", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()))
+            }})\n", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()))
+        }
+
+        if share_link_default.is_match(value){
+            js_vector.push(format!("var pageUrl=window.location.href;"))
+        }
+
+        for val in share_link_default.captures_iter(value){
+           match val.get(2).unwrap().as_str() {
+               "facebook" => {
+                    js_vector.push(format!("var {} = document.getElementById('{}');
+                    {}.href='https://www.facebook.com/sharer.php?u='+pageUrl;
+                    document.body.appendChild({});
+                ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+               },
+                "twitter"=>{
+                    js_vector.push(format!("var {} = document.getElementById('{}');
+                    {}.href='https://twitter.com/intent/tweet?url='+pageUrl;
+                    document.body.appendChild({});
+                ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                },
+                "linkedin"=>{
+                    js_vector.push(format!("var {} = document.getElementById('{}');
+                    {}.href='https://www.linkedin.com/shareArticle?mini=true&url='+pageUrl;
+                    document.body.appendChild({});
+                ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                },
+                "whatsapp"=>{
+                    js_vector.push(format!("var {} = document.getElementById('{}');
+                    {}.href='https://api.whatsapp.com/send?text='+pageUrl;
+                    document.body.appendChild({});
+                ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                },
+                "reddit"=>{
+                    js_vector.push(format!("var {} = document.getElementById('{}');
+                    {}.href='http://www.reddit.com/submit?url='+pageUrl;
+                    document.body.appendChild({});
+                ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                },
+               _ => {
+                panic!("unrecognized option {} valid options include facebook, twitter, linkedin, whatsapp and reddit", val.get(2).unwrap().as_str())
+               }
+           }
+        }
+
+        for val in share_link_custom.captures_iter(value){
+            match val.get(3).unwrap().as_str() {
+                "facebook" => {
+                     js_vector.push(format!("var {} = document.getElementById('{}');
+                     {}.href='https://www.facebook.com/sharer.php?u='+'{}';
+                     document.body.appendChild({});
+                 ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                },
+                 "twitter"=>{
+                     js_vector.push(format!("var {} = document.getElementById('{}');
+                     {}.href='https://twitter.com/intent/tweet?url='+'{}';
+                     document.body.appendChild({});
+                 ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                 },
+                 "linkedin"=>{
+                     js_vector.push(format!("var {} = document.getElementById('{}');
+                     {}.href='https://www.linkedin.com/shareArticle?mini=true&url='+'{}';
+                     document.body.appendChild({});
+                 ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                 },
+                 "whatsapp"=>{
+                     js_vector.push(format!("var {} = document.getElementById('{}');
+                     {}.href='https://api.whatsapp.com/send?text='+'{}';
+                     document.body.appendChild({});
+                 ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                 },
+                 "reddit"=>{
+                     js_vector.push(format!("var {} = document.getElementById('{}');
+                     {}.href='http://www.reddit.com/submit?url='+'{}';
+                     document.body.appendChild({});
+                 ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                 },
+                _ => {
+                 panic!("unrecognized option {} valid options include facebook, twitter, linkedin, whatsapp and reddit", val.get(2).unwrap().as_str())
+                }
+            }
         }
         js_vector
     }
