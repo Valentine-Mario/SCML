@@ -36,10 +36,6 @@ pub mod process_js{
 
         //format currency <tag id="id" formatCurrency="dollar">
         let format_currency=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?formatCurrency\s*?=\s*?["|']\s*?(\w+)\s*?["|'].*?>"#).unwrap();
-
-        //create multiple elements n times <tag id="id" repeat=23>
-        let create_element=Regex::new(r#"<\s*?(\w+)\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?repeat\s*?=\s*?(\d{1,}).*?>"#).unwrap();
-
         //reverse the item in a tag <tag id="id" reverseString>
         let reverse_element=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?reverseString.*?>"#).unwrap();
 
@@ -193,15 +189,7 @@ pub mod process_js{
             }
         }
 
-        for val in create_element.captures_iter(value){
-            js_vector.push(format!("for(var i = 0; i < {}; i += 1) {{
-                var element = document.createElement('{}');
-                element.id = '{}';
-                element.innerHTML = document.getElementById('{}').innerHTML;
-                document.body.appendChild(element);
-            }}\n", val.get(3).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(2).unwrap().as_str()))
-        }
-
+       
         for val in reverse_element.captures_iter(value){
             js_vector.push(format!("document.getElementById('{}').innerHTML= document.getElementById('{}').innerHTML.split(' ').reverse().join(' ')\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
         }
@@ -290,8 +278,15 @@ pub mod process_js{
                     document.body.appendChild({});
                 ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
                 },
+                "telegram"=>{
+                    js_vector.push(format!("var {} = document.getElementById('{}');
+                    {}.href='https://t.me/share/url?url='+pageUrl;
+                    document.body.appendChild({});
+                ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                
+                },
                _ => {
-                panic!("unrecognized option {} valid options include facebook, twitter, linkedin, whatsapp and reddit", val.get(2).unwrap().as_str())
+                panic!("unrecognized option {} valid options include facebook, twitter, linkedin, whatsapp, telegram and reddit", val.get(2).unwrap().as_str())
                }
            }
         }
@@ -327,6 +322,13 @@ pub mod process_js{
                      {}.href='http://www.reddit.com/submit?url='+'{}';
                      document.body.appendChild({});
                  ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                 },
+                 "telegram"=>{
+                    js_vector.push(format!("var {} = document.getElementById('{}');
+                     {}.href='https://t.me/share/url?url='+'{}';
+                     document.body.appendChild({});
+                 ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                
                  },
                 _ => {
                  panic!("unrecognized option {} valid options include facebook, twitter, linkedin, whatsapp and reddit", val.get(2).unwrap().as_str())
