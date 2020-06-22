@@ -16,6 +16,38 @@ pub mod process_html{
         tmp
     }
 
+    // pub fn replace_variable_parameter(scml_string:&str, scml_hash:HashMap<String, &str>)->String{
+    //     let mut tmp=String::from("");
+    //     let mut html_id = HashMap::new();
+    //     let after_replacement="";    
+
+    //     for (key, value) in scml_hash{
+    //         let string_target=format!(r#"in\[{}\s*?:\s*?\[(\w+=\s*?["|']\s*?.+\s*?["|']\s*?[,]??.*?)\]+?\s*?\]"#, key);
+    //         let string_regex=Regex::new(&string_target).unwrap();
+    //         let after_replacement= string_regex.replace_all(scml_string, value);
+
+    //         for val in string_regex.captures_iter(scml_string){
+
+    //             for val2 in Regex::new(r#"\s*?(\w+)\s*?=["|']\s*?(.+)["|'],??"#).unwrap().captures_iter(val.get(1).unwrap().as_str()){
+    //                 if Regex::new(r#"\s*?(\w+)\s*?=["|']\s*?(.+)["|'],??"#).unwrap().is_match(val.get(1).unwrap().as_str()){
+
+    //                 html_id.insert(String::from(val2.get(1).unwrap().as_str()), val2.get(2).unwrap().as_str());
+    //                 }
+    //             }
+
+                
+    //             for (key2, value2) in &html_id{
+    //                 println!("{:?}", &html_id);
+    //                 let var_format=format!("{{{{{}}}}}", key2);
+    //                 tmp= after_replacement.replace(&var_format, value2);
+    //             }
+    //         }
+        
+       
+    // }      
+    // tmp
+    // }
+
     pub fn generate_scml_hash(value:&str)->HashMap<String, &str>{
         let re= Regex::new(r"\[html (\w+)\]\s*?(.+?)\s*?\[html\]").unwrap();
         let mut html_id = HashMap::new();

@@ -17,9 +17,9 @@ fn main() {
         process::exit(1)
     });
      let file_content=file_content.replace("\n", "");
-//    let hash_value=process_html::generate_scml_hash(&file_content);
+   let hash_value=process_html::generate_scml_hash(&file_content);
 
-//    let final_string=process_html::replace_variable(&file_content, hash_value);
+   let final_string=process_html::replace_variable(&file_content, hash_value);
 
 //    let re= Regex::new(r"\[\s*?html \w*?\s*?\]").unwrap();
 //    let result=re.replace_all(&final_string, "");
@@ -29,7 +29,7 @@ fn main() {
 //        eprintln!("problem writing to file");
 //        process::exit(1);
 //    });
-   //println!("{}", result2)
-   let vector=process_js::process_innerhtml(&file_content);
-   println!("{:?}", vector);
+  // println!("{}", result2)
+//    let vector=process_js::process_innerhtml(&file_content);
+//    println!("{:?}", vector);
 }
