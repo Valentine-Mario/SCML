@@ -37,6 +37,8 @@ in[one23]
 in[stuff]
 <input id="some" disable=true/>
 <p id="somenum" shortenNum>123456</p>
+<p id="hey">some text here</p>
+<button id="copy" copyArea=hey>copy</button>
 [html]
 
 [html]

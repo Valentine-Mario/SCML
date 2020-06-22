@@ -54,6 +54,9 @@ pub mod process_js{
         //share button with custom url <tag id="id" shareCustome[url]="facebook">
         let share_link_custom=Regex::new(r#"<\s*?a\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?shareCustome\s*?\[\s*?(.*?)\s*?\]\s*?=\s*?["|']\s*?(\w+)\s*?["|'].*?>"#).unwrap();
 
+        //click to copy <tag id="id" copyArea=id_to_copy_from>
+        let copy_text=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?copyArea=\s*?(\w+).*?>"#).unwrap();
+
 
         //vector to store result
         let mut js_vector=vec![];
@@ -334,6 +337,25 @@ pub mod process_js{
                  panic!("unrecognized option {} valid options include facebook, twitter, linkedin, whatsapp and reddit", val.get(2).unwrap().as_str())
                 }
             }
+        }
+
+        if copy_text.is_match(value){
+            js_vector.push(format!("function copyToClip(id){{
+                var copyText = document.getElementById(id);    
+                var textArea = document.createElement('textarea');
+                    textArea.value = copyText.textContent;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('Copy');
+                    textArea.remove();
+                }}"))
+        }
+
+        for val in copy_text.captures_iter(value){
+            js_vector.push(format!("document.getElementById('{}').addEventListener('click', (e)=>{{
+                e.preventDefault();
+                copyToClip('{}')
+                }})", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()))
         }
         js_vector
     }
