@@ -24,12 +24,10 @@
 <h2 id="kai" limit=30 class="hy">this is another header</h2>
 <p id="fine" append="here">this is a para</p>
 <h2 id="round" repeat=23>hello</h2>
-in[vex]
 [html]
 
 [html vex]
 in[one23]
-in[stuff]
 <input id="some" disable=true/>
 <p id="somenum" shortenNum>123456</p>
 <p id="hey">some text here</p>
@@ -40,6 +38,7 @@ in[stuff]
 <span id="span">hey</span>
 <div id="get_val" innerHTML=var1>this is text</div>
 in[two]
+in[vex]
 [html]
 [html stuff]<p>hey here</p>
 <input id="form" getValue=var1>

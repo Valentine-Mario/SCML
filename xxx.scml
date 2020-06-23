@@ -1,5 +1,6 @@
 [html one]
 <p>some here</p>
+in[five]
 [html]
 
 [html two]
@@ -13,4 +14,13 @@ in[two]
 
 [html four]
 in[three]
+[html]
+
+[html five]
+<h1>five</h1>
+in[six]
+[html]
+
+[html six]
+<p>six<p>
 [html]

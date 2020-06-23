@@ -11,11 +11,7 @@ pub mod process_html{
         let mut tmp=String::from(scml_string);
         for (key, value) in &scml_hash{
             let key=format!("in[{}]", key);
-            tmp=tmp.replace(&key, value);  
-        }
-        for (key, value) in &scml_hash{
-            let key=format!("in[{}]", key);
-            if tmp.contains(&key){
+            while tmp.contains(&key){
                 tmp=tmp.replace(&key, value);  
             }
         }
