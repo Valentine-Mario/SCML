@@ -9,41 +9,45 @@ pub mod process_html{
     
     pub fn replace_variable(scml_string:&str, scml_hash:HashMap<String, &str>)->String{
         let mut tmp=String::from(scml_string);
-        for (key, value) in scml_hash{
+        for (key, value) in &scml_hash{
             let key=format!("in[{}]", key);
-            tmp=tmp.replace(&key, value);
+            tmp=tmp.replace(&key, value);  
+        }
+        for (key, value) in &scml_hash{
+            let key=format!("in[{}]", key);
+            if tmp.contains(&key){
+                tmp=tmp.replace(&key, value);  
+            }
         }
         tmp
     }
 
     // pub fn replace_variable_parameter(scml_string:&str, scml_hash:HashMap<String, &str>)->String{
-    //     let mut tmp=String::from("");
+    //     let mut tmp=String::from(scml_string);
     //     let mut html_id = HashMap::new();
-    //     let after_replacement="";    
 
-    //     for (key, value) in scml_hash{
-    //         let string_target=format!(r#"in\[{}\s*?:\s*?\[(\w+=\s*?["|']\s*?.+\s*?["|']\s*?[,]??.*?)\]+?\s*?\]"#, key);
+    //     for (key, mut value) in scml_hash{
+    //         let string_target=format!(r#"in\[{}\s*?:\s*?\[(\w+=\s*?["|']\s*?[[:alnum:]]*[[:punct:]]*\s*?["|']\s*?)\]+?\s*?\]"#, key);
     //         let string_regex=Regex::new(&string_target).unwrap();
-    //         let after_replacement= string_regex.replace_all(scml_string, value);
-
     //         for val in string_regex.captures_iter(scml_string){
 
-    //             for val2 in Regex::new(r#"\s*?(\w+)\s*?=["|']\s*?(.+)["|'],??"#).unwrap().captures_iter(val.get(1).unwrap().as_str()){
-    //                 if Regex::new(r#"\s*?(\w+)\s*?=["|']\s*?(.+)["|'],??"#).unwrap().is_match(val.get(1).unwrap().as_str()){
+    //             for val2 in Regex::new(r#"\s*?(\w+)\s*?=["|']\s*?(.*)["|'],??"#).unwrap().captures_iter(val.get(1).unwrap().as_str()){
+    //                 if Regex::new(r#"\s*?(\w+)\s*?=["|']\s*?(.*)["|']"#).unwrap().is_match(val.get(1).unwrap().as_str()){
 
     //                 html_id.insert(String::from(val2.get(1).unwrap().as_str()), val2.get(2).unwrap().as_str());
     //                 }
     //             }
 
-                
+    //             let mut new_val=String::from(value); 
+
     //             for (key2, value2) in &html_id{
-    //                 println!("{:?}", &html_id);
     //                 let var_format=format!("{{{{{}}}}}", key2);
-    //                 tmp= after_replacement.replace(&var_format, value2);
+            
+    //                 new_val= value.replace(&var_format, &value2);
     //             }
-    //         }
-        
-       
+    //             let string_litral=format!("in[{}:[{}]]", key, val.get(1).unwrap().as_str());
+    //             tmp=tmp.replace(&string_litral, &new_val);
+    //         }  
     // }      
     // tmp
     // }

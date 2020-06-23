@@ -20,7 +20,7 @@ fn main() {
    let hash_value=process_html::generate_scml_hash(&file_content);
 
    let final_string=process_html::replace_variable(&file_content, hash_value);
-
+    println!("{}", final_string);
 //    let re= Regex::new(r"\[\s*?html \w*?\s*?\]").unwrap();
 //    let result=re.replace_all(&final_string, "");
   
