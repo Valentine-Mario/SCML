@@ -15,6 +15,12 @@ pub mod process_html{
             let key=format!("in[{}]", key);
             while tmp.contains(&key){
                 tmp=tmp.replace(&key, value);  
+            } 
+        }
+        for (key, value) in &scml_hash{
+            let key=format!("in[{}]", key);
+            while tmp.contains(&key){
+                tmp=tmp.replace(&key, value);  
             }
              
         }
@@ -37,7 +43,7 @@ pub mod process_html{
 
     pub fn replace_file(scml_string:&str)->String{
         let mut tmp=String::from(scml_string);
-        let file_match=Regex::new(r#"inFile\[([[:alnum:]]*?[[:punct:]]*?[[:alnum:]]*?\.scml)\]"#).unwrap();
+        let file_match=Regex::new(r#"inFile\[(.+?\.scml)\]"#).unwrap();
         for val in file_match.captures_iter(scml_string){
             let file_content= read_file(&String::from(val.get(1).unwrap().as_str())).unwrap_or_else(|err| {
                 eprintln!("Problem reading file: {}", err);

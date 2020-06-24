@@ -254,37 +254,37 @@ pub mod process_js{
                "facebook" => {
                     js_vector.push(format!("var {} = document.getElementById('{}');
                     {}.href='https://www.facebook.com/sharer.php?u='+pageUrl;
-                    document.body.appendChild({});
+                    document.body.appendChild({})\n;
                 ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
                },
                 "twitter"=>{
                     js_vector.push(format!("var {} = document.getElementById('{}');
                     {}.href='https://twitter.com/intent/tweet?url='+pageUrl;
-                    document.body.appendChild({});
+                    document.body.appendChild({})\n;
                 ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
                 },
                 "linkedin"=>{
                     js_vector.push(format!("var {} = document.getElementById('{}');
                     {}.href='https://www.linkedin.com/shareArticle?mini=true&url='+pageUrl;
-                    document.body.appendChild({});
+                    document.body.appendChild({})\n;
                 ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
                 },
                 "whatsapp"=>{
                     js_vector.push(format!("var {} = document.getElementById('{}');
                     {}.href='https://api.whatsapp.com/send?text='+pageUrl;
-                    document.body.appendChild({});
+                    document.body.appendChild({})\n;
                 ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
                 },
                 "reddit"=>{
                     js_vector.push(format!("var {} = document.getElementById('{}');
                     {}.href='http://www.reddit.com/submit?url='+pageUrl;
-                    document.body.appendChild({});
+                    document.body.appendChild({})\n;
                 ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
                 },
                 "telegram"=>{
                     js_vector.push(format!("var {} = document.getElementById('{}');
                     {}.href='https://t.me/share/url?url='+pageUrl;
-                    document.body.appendChild({});
+                    document.body.appendChild({})\n;
                 ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
                 
                 },
@@ -299,37 +299,37 @@ pub mod process_js{
                 "facebook" => {
                      js_vector.push(format!("var {} = document.getElementById('{}');
                      {}.href='https://www.facebook.com/sharer.php?u='+'{}';
-                     document.body.appendChild({});
+                     document.body.appendChild({})\n;
                  ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()))
                 },
                  "twitter"=>{
                      js_vector.push(format!("var {} = document.getElementById('{}');
                      {}.href='https://twitter.com/intent/tweet?url='+'{}';
-                     document.body.appendChild({});
+                     document.body.appendChild({})\n;
                  ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()))
                  },
                  "linkedin"=>{
                      js_vector.push(format!("var {} = document.getElementById('{}');
                      {}.href='https://www.linkedin.com/shareArticle?mini=true&url='+'{}';
-                     document.body.appendChild({});
+                     document.body.appendChild({})\n;
                  ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()))
                  },
                  "whatsapp"=>{
                      js_vector.push(format!("var {} = document.getElementById('{}');
                      {}.href='https://api.whatsapp.com/send?text='+'{}';
-                     document.body.appendChild({});
+                     document.body.appendChild({})\n;
                  ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()))
                  },
                  "reddit"=>{
                      js_vector.push(format!("var {} = document.getElementById('{}');
                      {}.href='http://www.reddit.com/submit?url='+'{}';
-                     document.body.appendChild({});
+                     document.body.appendChild({})\n;
                  ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()))
                  },
                  "telegram"=>{
                     js_vector.push(format!("var {} = document.getElementById('{}');
                      {}.href='https://t.me/share/url?url='+'{}';
-                     document.body.appendChild({});
+                     document.body.appendChild({})\n;
                  ", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()))
                 
                  },
@@ -348,14 +348,14 @@ pub mod process_js{
                     textArea.select();
                     document.execCommand('Copy');
                     textArea.remove();
-                }}"))
+                }}\n"))
         }
 
         for val in copy_text.captures_iter(value){
             js_vector.push(format!("document.getElementById('{}').addEventListener('click', (e)=>{{
                 e.preventDefault();
                 copyToClip('{}')
-                }})", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()))
+                }})\n", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()))
         }
         js_vector
     }

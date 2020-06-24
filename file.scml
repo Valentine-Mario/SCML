@@ -1,6 +1,6 @@
 inFile[sss.scml]
 [html one23]
-<p id="aaa"   append="here">this is a para</p>
+<p id="aaa"   append="here is some text?">this is a para</p>
 <textarea id="io" getValue=var2/>
 <p id="hi" formatFloat>10000</p>
 <p id="sss" formatDate= mm/dd/yyyy>stuff</p>
