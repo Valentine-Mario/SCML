@@ -43,8 +43,9 @@ pub mod process_html{
                 eprintln!("Problem reading file: {}", err);
                 process::exit(1)
             });
+            let process_file=replace_file(&file_content);
             let string_format=format!("inFile[{}]", val.get(1).unwrap().as_str());
-            tmp=tmp.replace(&string_format, &file_content)
+            tmp=tmp.replace(&string_format, &process_file)
         }
         tmp
     }
