@@ -6,14 +6,45 @@ pub mod process_html{
     use std::error::Error;
     use std::fs::File;
     use std::io::prelude::*;
-    
+    use std::process;
+
     pub fn replace_variable(scml_string:&str, scml_hash:HashMap<String, &str>)->String{
+        //using three for loops seems to solve the problem temporary of recursively calling srgments
         let mut tmp=String::from(scml_string);
         for (key, value) in &scml_hash{
             let key=format!("in[{}]", key);
             while tmp.contains(&key){
                 tmp=tmp.replace(&key, value);  
             }
+             
+        }
+        for (key, value) in &scml_hash{
+            let key=format!("in[{}]", key);
+            while tmp.contains(&key){
+                tmp=tmp.replace(&key, value);  
+            }
+             
+        }
+        for (key, value) in &scml_hash{
+            let key=format!("in[{}]", key);
+            while tmp.contains(&key){
+                tmp=tmp.replace(&key, value);  
+            }
+             
+        }
+        tmp
+    }
+
+    pub fn replace_file(scml_string:&str)->String{
+        let mut tmp=String::from(scml_string);
+        let file_match=Regex::new(r#"inFile\[([[:alnum:]]*?[[:punct:]]*?[[:alnum:]]*?\.scml)\]"#).unwrap();
+        for val in file_match.captures_iter(scml_string){
+            let file_content= read_file(&String::from(val.get(1).unwrap().as_str())).unwrap_or_else(|err| {
+                eprintln!("Problem reading file: {}", err);
+                process::exit(1)
+            });
+            let string_format=format!("inFile[{}]", val.get(1).unwrap().as_str());
+            tmp=tmp.replace(&string_format, &file_content)
         }
         tmp
     }
@@ -52,9 +83,12 @@ pub mod process_html{
         let re= Regex::new(r"\[html (\w+)\]\s*?(.+?)\s*?\[html\]").unwrap();
         let mut html_id = HashMap::new();
         
-        for val in re.captures_iter(value){
-            html_id.insert(String::from(val.get(1).unwrap().as_str()), val.get(2).unwrap().as_str());
+        if re.is_match(value){
+            for val in re.captures_iter(value){
+                html_id.insert(String::from(val.get(1).unwrap().as_str()), val.get(2).unwrap().as_str());
+            }
         }
+        
         html_id
     }
     #[derive(Debug)]
