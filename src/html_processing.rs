@@ -9,7 +9,7 @@ pub mod process_html{
     use std::process;
 
     pub fn replace_variable(scml_string:&str, scml_hash:HashMap<String, &str>)->String{
-        //using three for loops seems to solve the problem temporary of recursively calling srgments
+        //using three for loops seems to solve the problem temporary of recursively calling srgments since i can't seem to solve this problem using recursion
         let mut tmp=String::from(scml_string);
         for (key, value) in &scml_hash{
             let key=format!("in[{}]", key);

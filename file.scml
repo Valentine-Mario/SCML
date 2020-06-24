@@ -1,4 +1,4 @@
-
+inFile[sss.scml]
 [html one23]
 <p id="aaa"   append="here">this is a para</p>
 <textarea id="io" getValue=var2/>
@@ -52,4 +52,3 @@ in[vex]
 </html>
 [html]
 inFile[xxx.scml]
-inFile[sss.scml]
