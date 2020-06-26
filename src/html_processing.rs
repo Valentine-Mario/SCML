@@ -8,36 +8,19 @@ pub mod process_html{
     use std::io::prelude::*;
     use std::process;
 
-    pub fn replace_variable(scml_string:&str, scml_hash:HashMap<String, &str>)->String{
-        //using three for loops seems to solve the problem temporary of recursively calling srgments since i can't seem to solve this problem using recursion
+    pub fn replace_variable(scml_string:&str, scml_hash:&HashMap<String, String>)->String{
         let mut tmp=String::from(scml_string);
-        for (key, value) in &scml_hash{
-            let key=format!("in[{}]", key);
-            while tmp.contains(&key){
-                tmp=tmp.replace(&key, value);  
-            } 
-        }
-        for (key, value) in &scml_hash{
-            let key=format!("in[{}]", key);
-            while tmp.contains(&key){
-                tmp=tmp.replace(&key, value);  
+
+        //loop through 20 times to be sure all values of in are correctly replaced
+        for _i in 1..20{
+            for (key, value) in scml_hash{
+                let key=format!("in[{}]", key);
+                    tmp=tmp.replace(&key, value);  
+                 
             }
-             
+           
         }
-        for (key, value) in &scml_hash{
-            let key=format!("in[{}]", key);
-            while tmp.contains(&key){
-                tmp=tmp.replace(&key, value);  
-            }
-             
-        }
-        for (key, value) in &scml_hash{
-            let key=format!("in[{}]", key);
-            while tmp.contains(&key){
-                tmp=tmp.replace(&key, value);  
-            }
-             
-        }
+        
         tmp
     }
 
@@ -86,13 +69,13 @@ pub mod process_html{
     // tmp
     // }
 
-    pub fn generate_scml_hash(value:&str)->HashMap<String, &str>{
+    pub fn generate_scml_hash(value:&str)->HashMap<String, String>{
         let re= Regex::new(r"\[html (\w+)\]\s*?(.+?)\s*?\[html\]").unwrap();
         let mut html_id = HashMap::new();
         
         if re.is_match(value){
             for val in re.captures_iter(value){
-                html_id.insert(String::from(val.get(1).unwrap().as_str()), val.get(2).unwrap().as_str());
+                html_id.insert(String::from(val.get(1).unwrap().as_str()), String::from(val.get(2).unwrap().as_str()));
             }
         }
         
@@ -143,4 +126,26 @@ pub mod process_html{
         Ok(())
     }
 
+}
+#[cfg(test)]
+mod test{
+    use super::*;
+    use std::collections::HashMap;
+
+
+#[test]
+fn test_replace_variable(){
+    let mut test_hash:HashMap<String, String> = HashMap::new();
+    test_hash.insert(String::from("segment"), String::from("<p>hello world</p>"));
+    let test_string=format!("in[segment]");
+    let new_value= process_html::replace_variable(&test_string, &test_hash);
+    assert_eq!(new_value, "<p>hello world</p>");
+}
+
+#[test]
+fn test_replace_file(){
+    let file_path=String::from("inFile[test.scml]");
+    let new_value=process_html::replace_file(&file_path);
+    assert_eq!(new_value, "<p>hello world</p>")
+}
 }

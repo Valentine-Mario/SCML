@@ -28,6 +28,7 @@ inFile[sss.scml]
 
 [html vex]
 in[one23]
+in[stuff]
 <input id="some" disable=true/>
 <p id="somenum" shortenNum>123456</p>
 <p id="hey">some text here</p>

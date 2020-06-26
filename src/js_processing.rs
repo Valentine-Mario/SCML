@@ -359,6 +359,5 @@ pub mod process_js{
         }
         js_vector
     }
-
     
 }
