@@ -113,15 +113,38 @@ pub mod process_html{
         Ok(content)
     }
 
-    pub fn write_to_file(value:&str, config:Config)->  Result<(), Box<dyn Error>>{
-        let output_filename = config.new_file;
+    pub fn write_to_html_file(value:&str, config:&Config)->  Result<(), Box<dyn Error>>{
+        let output_filename = &config.new_file;
         let mut output_filename = String::from(output_filename);
         output_filename.push_str(".html");
         let mut outfile = File::create(output_filename.to_string())?;
         let token= value.split("[html]");
+        let trailing_html=format!("<!DOCTYPE html>\n <html lang='en'><head><meta charset='UTF-8'>\n
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>\n
+            <title>{}</title>\n
+        </head>\n
+        <body>", &config.new_file);
+        outfile.write_all(&trailing_html.as_bytes())?;
         for line in token {
             outfile.write_all(line.as_bytes())?;
             outfile.write_all(b"\n")?
+        }
+        let ending_html=format!("</body>
+        <script type='text/javascript' src='{}.js'></script>
+        </html>", &config.new_file);
+        outfile.write_all(&ending_html.as_bytes())?;
+        Ok(())
+    }
+
+    pub fn write_to_js_file(value:&Vec<String>, config:&Config)->Result<(), Box<dyn Error>>{
+        let output_filename = &config.new_file;
+        let mut output_filename = String::from(output_filename);
+        output_filename.push_str(".js");
+        let mut outfile = File::create(output_filename.to_string())?;
+
+        for i in value {
+            outfile.write_all(i.as_bytes())?;
+            outfile.write_all(b"\n\n")?
         }
         Ok(())
     }

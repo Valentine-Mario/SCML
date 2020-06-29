@@ -3,6 +3,8 @@ inFile[sss.scml]
 <p id="aaa"   append="here is some text?">this is a para</p>
 <textarea id="io" getValue=var2/>
 <p id="hi" formatFloat>10000</p>
+<p id="hi" formatFloat>10000</p>
+<p id="hi" formatInt>10000</p>
 <p id="sss" formatDate= mm/dd/yyyy>stuff</p>
 <p id="jjj" formatCurrency=" euro ">10000<p>
 
@@ -23,7 +25,7 @@ inFile[sss.scml]
 <p id="here" append="here it is">hi there</p>
 <h2 id="kai" limit=30 class="hy">this is another header</h2>
 <p id="fine" append="here">this is a para</p>
-<h2 id="round" repeat=23>hello</h2>
+<h2 id="round">hello</h2>
 [html]
 
 [html vex]

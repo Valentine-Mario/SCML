@@ -16,21 +16,28 @@ fn main() {
         eprintln!("Problem reading file: {}", err);
         process::exit(1)
     });
+    println!("processing html");
      let file_content_from_another_file=process_html::replace_file(&file_content);
      let file_content=file_content_from_another_file.replace("\n", "");
    let hash_value=process_html::generate_scml_hash(&file_content);
 
    let final_string=process_html::replace_variable(&file_content, &hash_value);
-    println!("{}", final_string);
-//    let re= Regex::new(r"\[\s*?html \w*?\s*?\]").unwrap();
-//    let result=re.replace_all(&final_string, "");
+   let vector=process_js::process_innerhtml(&final_string);
+
+   println!("processing javascript");
+   process_html::write_to_js_file(&vector, &get_filename).unwrap_or_else(|error|{
+     eprintln!("problem writing to file {}", error);
+     process::exit(1);
+ });
+   let re= Regex::new(r#"\[\s*?html \w*?\s*?\]|append\s*?=\s*?["|'](.+?)["|']|limit\s*?=\s*?(\d{1,})|innerHTML\s*?=\s*?(\w+)|getValue\s*?=\s*?(\w+)|disable\s*?=\s*?true|(\w+)\s*?=\s*?\{(.*?)\}\s*?|formatInt|formatFloat|visibility\s*?=\s*?(\w+)|formatDate\s*?=\s*?(\w+/\w+/\w+)\s*?|formatTimeAgo|formatCurrency\s*?=\s*?["|']\s*?(\w+)\s*?["|']|reverseString|shortenNum|onChange=\s*?(\w+)|getForm=\s*?(\w+)|shareDefault=\s*?["|']\s*?(\w+)\s*?["|']|shareCustome\s*?\[\s*?(.*?)\s*?\]\s*?=\s*?["|']\s*?(\w+)\s*?["|']|copyArea=\s*?(\w+)"#).unwrap();
+   let result=re.replace_all(&final_string, "");
   
 
-//    process_html::write_to_file(&result, get_filename).unwrap_or_else(|error|{
-//        eprintln!("problem writing to file");
-//        process::exit(1);
-//    });
+   process_html::write_to_html_file(&result, &get_filename).unwrap_or_else(|error|{
+       eprintln!("problem writing to file {}", error);
+       process::exit(1);
+   });
   // println!("{}", result2)
-  //  let vector=process_js::process_innerhtml(&file_content);
+   
   //  println!("{:?}", vector);
 }
