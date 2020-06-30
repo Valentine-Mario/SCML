@@ -7,6 +7,8 @@ pub mod process_html{
     use std::fs::File;
     use std::io::prelude::*;
     use std::process;
+    use std::ffi::OsStr;
+
 
     pub fn replace_variable(scml_string:&str, scml_hash:&HashMap<String, String>)->String{
         let mut tmp=String::from(scml_string);
@@ -109,8 +111,12 @@ pub mod process_html{
         }
     }
     pub fn read_file(path:&String)->Result<String, Box<dyn Error>>{
-        let content = fs::read_to_string(Path::new(path))?;
-        Ok(content)
+        if Path::new(&path).extension().and_then(OsStr::to_str)== Some("scml"){
+            let content = fs::read_to_string(Path::new(&path))?;
+            return Ok(content);
+        }else{
+            panic!("cannot read none scml file")
+        }
     }
 
     pub fn write_to_html_file(value:&str, config:&Config)->  Result<(), Box<dyn Error>>{

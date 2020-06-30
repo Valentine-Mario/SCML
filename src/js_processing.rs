@@ -77,7 +77,7 @@ pub mod process_js{
         }
 
         for val in form_disable.captures_iter(value){
-            js_vector.push(format!("document.getElementById(\"{}\").disable=true;\n", val.get(1).unwrap().as_str()));
+            js_vector.push(format!("document.getElementById(\"{}\").disabled=true;\n", val.get(1).unwrap().as_str()));
         }
 
         for val in events.captures_iter(value){
@@ -178,13 +178,13 @@ pub mod process_js{
         for val in date_format.captures_iter(value){
             match val.get(2).unwrap().as_str(){
                 "dd/mm/yyyy"=>{
-                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()+'/'+new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1 +'/'+new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()+'/'+parseInt(new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1) +'/'+new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
                 },
                 "mm/dd/yyyy"=>{
-                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1 + new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()+'/'+new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= parseInt(new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1)+'/' + new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()+'/'+new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
                 },
                 "yyyy/mm/dd"=>{
-                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()+ '/'+ new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1 + new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
+                    js_vector.push(format!("document.getElementById(\"{}\").innerHTML= new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getFullYear()+ '/'+ parseInt(new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getMonth()+1) +'/'+ new Date(Date.parse(document.getElementById(\"{}\").innerHTML)).getDate()\n", val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str(), val.get(1).unwrap().as_str()))
                 },
                 _=>{
                     panic!("invalid date format {} valid formats include: dd/mm/yyyy, mm/dd/yyyy, yyyy/mm/dd", val.get(2).unwrap().as_str());
