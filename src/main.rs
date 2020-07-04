@@ -29,7 +29,7 @@ fn main() {
      eprintln!("problem writing to file {}", error);
      process::exit(1);
  });
-   let re= Regex::new(r#"\[\s*?html \w*?\s*?\]|append\s*?=\s*?["|'](.+?)["|']|limit\s*?=\s*?(\d{1,})|innerHTML\s*?=\s*?(\w+)|getValue\s*?=\s*?(\w+)|disable\s*?=\s*?true|(\w+)\s*?=\s*?\{(.*?)\}\s*?|formatInt|formatFloat|visibility\s*?=\s*?(\w+)|formatDate\s*?=\s*?(\w+/\w+/\w+)\s*?|formatTimeAgo|formatCurrency\s*?=\s*?["|']\s*?(\w+)\s*?["|']|reverseString|shortenNum|onChange=\s*?(\w+)|getForm=\s*?(\w+)|shareDefault=\s*?["|']\s*?(\w+)\s*?["|']|shareCustome\s*?\[\s*?(.*?)\s*?\]\s*?=\s*?["|']\s*?(\w+)\s*?["|']|copyArea=\s*?(\w+)"#).unwrap();
+   let re= Regex::new(r#"\[\s*?html \w*?\s*?\]|append\s*?=\s*?["|'](.+?)["|']|limit\s*?=\s*?(\d{1,})|innerHTML\s*?=\s*?(\w+)|getValue\s*?=\s*?(\w+)|disable\s*?=\s*?true|(\w+)\s*?=\s*?\{(.*?)\}\s*?|formatInt|formatFloat|visibility\s*?=\s*?(\w+)|formatDate\s*?=\s*?(\w+/\w+/\w+)\s*?|formatTimeAgo|formatCurrency\s*?=\s*?["|']\s*?(\w+)\s*?["|']|reverseString|shortenNum|onChange=\s*?(\w+)|submitForm\s*?\[(.+?)\]\s*?=\s*?(\w+)|shareDefault=\s*?["|']\s*?(\w+)\s*?["|']|shareCustome\s*?\[\s*?(.*?)\s*?\]\s*?=\s*?["|']\s*?(\w+)\s*?["|']|copyArea=\s*?(\w+)"#).unwrap();
    let result=re.replace_all(&final_string, "");
   
 

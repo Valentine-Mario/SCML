@@ -45,8 +45,8 @@ pub mod process_js{
         //write input to html tag onchange <tag id="id" onChange=id_to_write_to>
         let write_to_tag=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?onChange=\s*?(\w+).*?>"#).unwrap();
 
-        //get all inputs in a form <tag id="id" getForm=id_of_form>
-        let form_inputs=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?getForm=\s*?(\w+).*?>"#).unwrap();
+        //get all inputs in a form <tag id="id" submitForm[url]=id_of_form>
+        let form_inputs=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?submitForm\s*?\[(.+?)\]\s*?=\s*?(\w+).*?>"#).unwrap();
 
         //share button with page url as default <tag id="id" shareDefault="facebook">
         let share_link_default=Regex::new(r#"<\s*?a\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?shareDefault=\s*?["|']\s*?(\w+)\s*?["|'].*?>"#).unwrap();
@@ -241,8 +241,16 @@ pub mod process_js{
         for val in form_inputs.captures_iter(value){
             js_vector.push(format!("document.getElementById('{}').addEventListener('click', (event)=>{{
                 event.preventDefault();
-                console.log(getForm('{}'))
-            }})\n", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()))
+                fetch('{}', {{
+                    method: 'POST',
+                    headers: {{
+                      'Content-Type': 'application/json'
+}},
+                    body:JSON.stringify(getForm('{}'))
+                }}).then((res) => res.json())
+                .then((data) =>  console.log(data))
+                .catch((err)=>console.log(err))
+            }})\n", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str(), val.get(3).unwrap().as_str()))
         }
 
         if share_link_default.is_match(value){
