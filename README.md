@@ -101,7 +101,7 @@ in[seg_2]
 
  ```
 
- Notice that seg_2 imports seg_1 but the final segment does not directly call seg_1. But because the annonymous segment calls seg_2 which calls seg_1, it would import seg_1 along with it. Ang this can go on 20 layers deep :scream:
+ Notice that seg_2 imports seg_1 but the final segment does not directly call seg_1. But because the annonymous segment calls seg_2 which calls seg_1, it would import seg_1 along with it. And this can go on 20 layers deep :scream:
 
 Note: Avoid importing segments in itself.
 
@@ -141,7 +141,6 @@ With would replace the inFile with the content of the file when you run the comm
 
 ```
 scml file.scml app
-
 ```
 
 Assuming the files you import have segments eg header.scml has a segment called *one* as thus:
@@ -171,3 +170,74 @@ Note that this segment *one* isn't in the current scml file but in the header.sc
 Note: Avoid using extra spaces when importing files eg: inFile[ file.scml], inFile [file.scml] would be ignored.
 
 ## JS PROCESSING
+
+SCML also has some helper functions that transpile to your regular javascript. But don't be afraid, this syntax helpers also feel like regulr HTML :grin:
+
+**Please note that when using JS helper functions the following syntax structure is to be followed <tag id="id_here" heler_func> Every tag that uses JS helper function must have an ID and the helper function should come right after the ID. eg <p id="tag1" append="Let's go there!!!"></p> If you wish to assign class or extra attribues to the tag, it should be added after the helper func eg <p id="tag1" append="Let's go there!!!" class="class_one"></p> and be sure to use the protocol for naming variable when naming ID because in some cases, some ID would be used as variable names. Improperly formatted syntax would be ignored.**
+
+#### Append text
+To append text to a particular html tag, use the following syntax:
+
+```
+<p id="tag1" append="Let's go there!!!"></p>
+```
+This helps you dynamically append the text "Let's go there!!!" to the tag using JS.
+
+#### Limit text
+To limit text in a tag, use the following syntax:
+
+```
+<p id="id" limit=10>This text would be limited to the first 10 char</p>
+```
+This would limit the text in the tag to the first 10 char
+
+#### Get tag content
+This allows you to get the content of a tag:
+
+```
+<tag id="id" innerHTML=var1>get this content</tag>
+```
+This would get the content of the tag and assign them to the variable name var1 we decleard above
+
+#### Get form input
+To get the imput from a form:
+
+```
+<input id="id" getValue=var2 type="text">
+```
+This would get the value of the form input and asign them to the variable name var2
+
+#### Disable
+To disable form input or button
+
+```
+<input id="id" disable=true>
+```
+This would disable this form input. It could also be used for button, textarea, etc.
+
+#### JS expression
+You can also write you JS expresion that would be run with an event listener inside your SCML script
+
+```
+<button id="id" click={console.log("hi"); let c=500; console.log(c);}></button>
+```
+This would run the js expression with the cick event listener. Other supported  event listerners include: click, abort, change, animationstart, canplay, copy, dbclick, drag, drop, fullscreenchange, hashchange, input, keydown, keypress, keyup, message, mousedown, mousemove, offline, online, pagehide, paste, pause, play, playing, scroll, search, seeking, seeked, select, volumechange
+
+#### Format Number
+To format a interger number or a float number:
+
+```
+<p id="id" formatInt>100000</p>
+```
+
+```
+<p id="id" formatFloat>100000.978</p>
+```
+
+#### Visibility
+Modify visibility of a tag:
+
+```
+<p id="id" visibility=hidden>Hide this text</p>
+```
+Other options other than hidden include: collapse, visible, initial, inherit
