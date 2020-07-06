@@ -107,7 +107,7 @@ Note: Avoid importing segments in itself.
 
  #### Import SCML files and reuse segments from other files
 
-SCML also allow you reuse other SCML files. Instead of rewriting headers and footers for every HTML files, You can easily create an SCML header and footer file, then import it to be used in your current file. Sweet right :grin:
+SCML also allow you reuse other SCML files. Instead of rewriting headers and footers for every HTML files, You can easily create an SCML header and footer file, then import it to be used in your current file using the syntax inFile[path_to_scml]. Sweet right :grin:
 
 Let's look at example usage.
 create a file called **header.scml** and add the following content to it
@@ -166,6 +166,27 @@ in[one]
 ```
 
 Note that this segment *one* isn't in the current scml file but in the header.scml file. But since the file has been imported, the segments are available in the current file.
+
+Another great feature is that you can also nest importing files eg:
+
+**file1.scml**
+```
+<p>this is file one</p>
+```
+
+**file2.scml**
+```
+<p>this is file 2</p>
+inFile[file1.scml]
+```
+
+**file3.scml**
+```
+<p>this is file 3</p>
+inFile[file2.scml]
+```
+
+Notice that file 1 is imported in file 2 while file 2 is imported in file 3. When File 3 is transpiled, it would contain the contents of file 1 and file 2 becuase it is dependent on file 2 which is dependent on file 1. And of course you can reuse segments in either file 2 or file 1 from file 3.
 
 Note: Avoid using extra spaces when importing files eg: inFile[ file.scml], inFile [file.scml] would be ignored.
 
