@@ -241,3 +241,87 @@ Modify visibility of a tag:
 <p id="id" visibility=hidden>Hide this text</p>
 ```
 Other options other than hidden include: collapse, visible, initial, inherit
+
+#### Formate Date
+To formate a date inbetween a tag to dd/mm/yyyy format
+
+```
+<p id="id" formatDate=dd/mm/yyyy>2020-06-10T17:47:29.156Z</p>
+
+```
+Other date format that could be used include: mm/dd/yyyy and yyyy/mm/dd
+
+#### Time Ago
+To format date to reflect time ago eg 3 days ago, 10 years ago, etc
+
+```
+<p id="id" formatTimeAgo>2020-06-10T17:47:29.156Z</p>
+```
+
+#### Format currency
+To format currency to dollars:
+
+```
+<p id="id" formatCurrency="dollar">12000</p>
+```
+Other currency options include: dollar, pounds, naira, yen, euro, and franc
+
+#### Reverse string
+To reverse the string in a html tag:
+
+```
+<p id="id" reverseString>reverse this string</p>
+```
+
+#### Shorten number
+To shorten numbers from 1,000 to 1K or 1,000,000 to 1M:
+
+```
+<p id="id" shortenNum>10000</p>
+```
+#### Write from form to tag
+To dynbamically update a tag with a form input:
+```
+<p id="write_here"></p>
+
+<input id="id" onChange=write_here>
+```
+As the content of the form input changes, the tag with id write_here is dynamically updated
+
+#### Submit form input to an endpoint
+To submit a form input to an endpoint:
+
+```
+<form id="myForm">
+	<input name="email" type="text"/>
+<button id="mybut" submitForm[https://submit.com]=myForm>click</button>
+</form>
+```
+notice in the button tag we did *id="mybut" submitForm[https://submit.com]=myForm* we pass an id to the button, followed by submitForm[https://submit.com] which contains the url you wish to submit to followed by the id of the form we want to submit.
+
+#### Share link
+To create a share link to social media (this is only used with the a tag):
+This is to share the defulat page url
+
+```
+<a id="id" shareDefault="facebook">facebook<a>
+```
+
+While to share with a custom page url
+
+```
+<a id="id" shareCustome[custom_url]="facebook">facebook</a>
+```
+
+Other social media that can be used apart from facebook include: twitter, linkedin, whatsapp, telegram and reddit
+
+#### Click to copy
+To create a click to copy button:
+```
+<p id="copy_me">i want to copy this</p>
+<button id="id" copyArea=copy_me>click<.button>
+```
+Pass in the id of the area you wish to copy in the cutton. And it would convert it to a click to copy button
+
+#### Author
+Oragbakosi Valentine
