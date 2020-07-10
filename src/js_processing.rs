@@ -1,8 +1,8 @@
 pub mod process_js{
     use regex::Regex;
     pub fn process_innerhtml(value:&str)->Vec<String>{
-        // append text <tag id="id here" append="append this text to tag">
-        let append_text=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?append\s*?=\s*?["|'](.+?)["|'].*?>"#).unwrap();
+        // append text <tag id="id here" append="append this text to tag" end> or tag id="id here" append=var_name end>
+        let append_text=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?append\s*?=\s*?(.+?)\s*?end\s*?.*?>"#).unwrap();
 
         //limit text size in tag <tag id="id" limit=100>
         let limit_size= Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?limit\s*?=\s*?(\d{1,}).*?>"#).unwrap();
@@ -60,15 +60,8 @@ pub mod process_js{
 
         //vector to store result
         let mut js_vector=vec![];
-        for val in append_text.captures_iter(value){
-        js_vector.push(format!("document.getElementById(\"{}\").innerHTML=\"{}\";\n", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()))
-        }
-
-        for val2 in limit_size.captures_iter(value){
-            js_vector.push(format!("document.getElementById(\"{}\").innerHTML= document.getElementById(\"{}\").innerHTML.substring(0, {});\n", val2.get(1).unwrap().as_str(), val2.get(1).unwrap().as_str(), val2.get(2).unwrap().as_str()))
-        }
-
-        for val in inner_html.captures_iter(value){
+	
+	 for val in inner_html.captures_iter(value){
             js_vector.push(format!("let {}= document.getElementById(\"{}\").innerHTML;\n", val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()));
         }
 
@@ -76,6 +69,15 @@ pub mod process_js{
             js_vector.push(format!("let {}=document.getElementById(\"{}\").value;\n", val.get(2).unwrap().as_str(), val.get(1).unwrap().as_str()));
         }
 
+        for val in append_text.captures_iter(value){
+        js_vector.push(format!("document.getElementById(\"{}\").innerHTML={};\n", val.get(1).unwrap().as_str(), val.get(2).unwrap().as_str()))
+        }
+
+        for val2 in limit_size.captures_iter(value){
+            js_vector.push(format!("document.getElementById(\"{}\").innerHTML= document.getElementById(\"{}\").innerHTML.substring(0, {});\n", val2.get(1).unwrap().as_str(), val2.get(1).unwrap().as_str(), val2.get(2).unwrap().as_str()))
+        }
+
+       
         for val in form_disable.captures_iter(value){
             js_vector.push(format!("document.getElementById(\"{}\").disabled=true;\n", val.get(1).unwrap().as_str()));
         }
