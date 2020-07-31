@@ -1,12 +1,13 @@
 # SCML (Scripting Markup Language)
 
-Scripting markup language is a custom easy to use markup language with HTML like syntax withextra features that transpile to Javascript and HTML
+Scripting markup language is a custom easy to use markup language with HTML like syntax that transpile to Javascript and HTML
 
-The idea of SCML was to give simple markup extra features that anyone can easily get started with and get a web page running with little knowledge of JS. It allows you to write less and get more. It is written entirely in the Rust programming language.
+The idea of SCML is to give simple markup extra features that anyone can easily get started with and get a web page running with little knowledge of JS. It is written entirely in the Rust programming language.
 
-To download the binary for the cli [click](https://github.com/Valentine-Mario/SCML/releases/tag/0.1.0)
+To download the binary for the cli [click](https://github.com/Valentine-Mario/SCML/releases/tag/1.0.0)
 
-- For Linux users: Place the binary in your **/usr/bin** or **/usr/local/bin** directory to make the CLI command globally accessible
+- For Linux users: Place the binary in your **/usr/bin** or **/usr/local/bin** directory to make the CLI command globally accessible 
+- You might need to run the chmod command first **chmod +x scml**
 
 - For Windows users: 
 
@@ -101,13 +102,13 @@ in[seg_2]
 
  ```
 
- Notice that seg_2 imports seg_1 but the final segment does not directly call seg_1. But because the annonymous segment calls seg_2 which calls seg_1, it would import seg_1 along with it. And this can go on 20 layers deep :scream:
+ Notice that seg_2 imports seg_1 but the final segment does not directly call seg_1. But because the annonymous segment calls seg_2 which calls seg_1, it would import seg_1 along with it. And this can go on 50 layers deep :scream:
 
 Note: Avoid importing segments in itself.
 
  #### Import SCML files and reuse segments from other files
 
-SCML also allow you reuse other SCML files. Instead of rewriting headers and footers for every HTML files, You can easily create an SCML header and footer file, then import it to be used in your current file using the syntax inFile[path_to_scml]. Sweet right :grin:
+SCML also allow you reuse other SCML files. For example instead of rewriting headers and footers for every HTML files, You can easily create an SCML header and footer file, then import it to be used in your current file using the syntax inFile[path_to_scml]. Sweet right :grin:
 
 Let's look at example usage.
 create a file called **header.scml** and add the following content to it
@@ -188,21 +189,26 @@ inFile[file2.scml]
 
 Notice that file 1 is imported in file 2 while file 2 is imported in file 3. When File 3 is transpiled, it would contain the contents of file 1 and file 2 becuase it is dependent on file 2 which is dependent on file 1. And of course you can reuse segments in either file 2 or file 1 from file 3.
 
+#### Comments
+
+Adding comments is pretty simple. To add a comment to your SCML code, just start the line with # to comment out a particular line
+
+```
+[html ind1]
+#this is a comment
+[html]
+```
+Commented sections would not be included in the transpiled HTML
+
 Note: Avoid using extra spaces when importing files eg: inFile[ file.scml], inFile [file.scml] would be ignored.
 
 ## JS PROCESSING
 
 SCML also has some helper functions that transpile to your regular javascript. But don't be afraid, this syntax helpers also feel like regulr HTML :grin:
 
-**Please note that when using JS helper functions the following syntax structure is to be followed <tag id="id_here" heler_func> Every tag that uses JS helper function must have an ID and the helper function should come right after the ID. eg <p id="tag1" append="Let's go there!!!"></p> If you wish to assign class or extra attribues to the tag, it should be added after the helper func eg <p id="tag1" append="Let's go there!!!" class="class_one"></p> and be sure to use the protocol for naming variable when naming ID because in some cases, some ID would be used as variable names. Improperly formatted syntax would be ignored. Also note that not more than one helper js function should be used per tag else only the first helper function would be used and the rest ignored. And finally avoid reusing segments that contain helper functions since reusing replicates the ID again and ID has to be unique to a tag in HTML**
+**Please note that when using JS helper functions the following syntax structure is to be followed <tag id="id_here" heler_func> Every tag that uses JS helper function must have an ID and the helper function should come right after the ID. eg <p id="tag1" append="Let's go there!!!"></p> If you wish to assign class or extra attribues to the tag, it should be added after the helper func eg <p id="tag1" append="Let's go there!!!" class="class_one"></p> and be sure to use the protocol for naming variable when naming ID because in some cases, some ID would be used as variable names. Improperly formatted syntax would be ignored. Also note that not more than one helper js function should be used per tag else only the first helper function would be used and the rest ignored. And finally avoid reusing segments that contain helper functions since ID is supposed to be unique to a tag**
 
-#### Append text
-To append text to a particular html tag, use the following syntax:
 
-```
-<p id="tag1" append="Let's go there!!!"></p>
-```
-This helps you dynamically append the text "Let's go there!!!" to the tag using JS.
 
 #### Limit text
 To limit text in a tag, use the following syntax:
@@ -219,6 +225,20 @@ This allows you to get the content of a tag:
 <tag id="id" innerHTML=var1>get this content</tag>
 ```
 This would get the content of the tag and assign them to the variable name var1 we decleard above
+
+#### Append text
+To append text to a particular html tag, use the following syntax:
+
+```
+#to dynamically add static string
+<p id="tag1" append="Let's go there!!!" end></p>
+
+#to grab text from a string and add it dynamically to another tag using the append helper function
+<p id="id2" innerHTML=var2>get this text</p>
+<p id="id3" append=var2 end></p>
+
+```
+This helps you dynamically append the text "Let's go there!!!" to the tag using JS. The end helps specify the end of the sentence or variable. Notice in the second example how i dynamically extracted text from the first tag using innerHTML and used the append to append it into another tag
 
 #### Get form input
 To get the imput from a form:
@@ -318,7 +338,7 @@ To submit a form input to an endpoint:
 <button id="mybut" submitForm[https://submit.com]=myForm>click</button>
 </form>
 ```
-notice in the button tag we did *id="mybut" submitForm[https://submit.com]=myForm* we pass an id to the button, followed by submitForm[https://submit.com] which contains the url you wish to submit to followed by the id of the form we want to submit.
+notice in the button tag we did *id="mybut" submitForm[https://submit.com]=myForm* we pass an id to the button, followed by submitForm[https://submit.com] which contains the url you wish to submit to and after that we input the form id which in this case is myForm.
 
 #### Share link
 To create a share link to social media (this is only used with the a tag):

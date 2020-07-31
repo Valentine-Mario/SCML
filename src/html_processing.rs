@@ -14,10 +14,10 @@ pub mod process_html{
         let mut tmp=String::from(scml_string);
 
         //loop through 20 times to be sure all values of in are correctly replaced
-        for _i in 1..20{
+        for _i in 1..50{
             for (key, value) in scml_hash{
                 let key=format!("in[{}]", key);
-                    tmp=tmp.replace(&key, value);  
+                tmp=tmp.replace(&key, value);  
                  
             }
            
@@ -91,8 +91,15 @@ pub mod process_html{
     impl Config {
         pub fn new(mut value: std::env::Args) -> Result<Config, &'static str> {
             if value.len() < 3 {
-                return Err("at least 2 arguments are expected");
-            } else {
+                println!("
+Inavlid number of arguments parsed
+SCML CLI options
+Options:\n\tscml scml_path new_file_name => Transpile SCML and create HTML and JS
+
+Author: Oragbakosi Valentine <email: oragbakosi13400@gmail.com>
+                ");
+                return Err("");
+            }else {
                 value.next();
                 let filename = match value.next() {
                     Some(arg) => arg,

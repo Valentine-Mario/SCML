@@ -1,6 +1,6 @@
 pub mod process_js{
     use regex::Regex;
-    pub fn process_innerhtml(value:&str)->Vec<String>{
+    pub fn process_innerjs(value:&str)->Vec<String>{
         // append text <tag id="id here" append="append this text to tag" end> or tag id="id here" append=var_name end>
         let append_text=Regex::new(r#"<\s*?\w+?\s*?id=\s*?["|']\s*?(\w+)\s*?["|']\s*?append\s*?=\s*?(.+?)\s*?end\s*?.*?>"#).unwrap();
 
