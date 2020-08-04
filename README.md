@@ -1,7 +1,7 @@
 # SCML (Scripting Markup Language)
 
-
 Scripting Markup Language is a custom easy to use markup language with HTML-like syntax with extra features that transpile to Javascript and HTML.
+
 
 The idea of SCML was to give simple markup extra features, that anyone can easily get started with and get a web page running with little knowledge of JS. It allows you to write less and get more! It is written entirely in the Rust programming language.
 
@@ -111,7 +111,9 @@ Note: Avoid importing segments in itself.
  #### Import SCML files and reuse segments from other files
 
 
+
 SCML also allows you reuse other SCML files. Instead of rewriting headers and footers for every HTML files, you can easily create an SCML header and footer file, then import it to be used in your current file using the syntax inFile[path_to_scml]. Sweet right? :grin:
+
 
 Let's look at an example.
 Create a file called **header.scml** and add the following content to it
@@ -192,6 +194,7 @@ inFile[file2.scml]
 
 Notice that file 1 is imported in file 2 while file 2 is imported in file 3. When File 3 is transpiled, it would contain the contents of file 1 and file 2 because it is dependent on file 2 which is dependent on file 1. And of course you can reuse segments in either file 2 or file 1 from file 3.
 
+
 #### Comments
 
 Adding comments is pretty simple. To add a comment to your SCML code, just start the line with # to comment out a particular line
@@ -202,6 +205,7 @@ Adding comments is pretty simple. To add a comment to your SCML code, just start
 [html]
 ```
 Commented sections would not be included in the transpiled HTML
+
 
 Note: Avoid using extra spaces when importing files eg: inFile[ file.scml], inFile [file.scml] would be ignored.
 
@@ -236,6 +240,7 @@ This allows you to get the content of a tag:
 <tag id="id" innerHTML=var1>get this content</tag>
 ```
 This would get the content of the tag and assign them to the variable name var1 we decleard above.
+
 
 #### Append text
 To append text to a particular html tag, use the following syntax:
