@@ -25,6 +25,7 @@ inFile[head.scml]
 [html]
 
 [html four]
+#this is a comment
 <p id="four_head" visibility=visible>text four<p>
 <div id="some_date" formatDate=dd/mm/yyyy>2020-06-10T17:47:29.156Z</div>
 <div id="some_date3" formatDate=mm/dd/yyyy>2020-06-10T17:47:29.156Z</div>
