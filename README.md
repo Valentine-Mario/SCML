@@ -1,8 +1,9 @@
 # SCML (Scripting Markup Language)
 
-Scripting markup language is a custom easy to use markup language with HTML like syntax that transpile to Javascript and HTML
 
-The idea of SCML is to give simple markup extra features that anyone can easily get started with and get a web page running with little knowledge of JS. It is written entirely in the Rust programming language.
+Scripting Markup Language is a custom easy to use markup language with HTML-like syntax with extra features that transpile to Javascript and HTML.
+
+The idea of SCML was to give simple markup extra features, that anyone can easily get started with and get a web page running with little knowledge of JS. It allows you to write less and get more! It is written entirely in the Rust programming language.
 
 To download the binary for the cli [click](https://github.com/Valentine-Mario/SCML/releases/tag/1.0.0)
 
@@ -32,7 +33,7 @@ Easy!!! :smiley:
 
 ## HTML PROCESSING
 
-SCML gives features that allow you reuse HTML segments, import SCML files, and reuse segments from other SCML files
+SCML gives features that allow you reuse HTML segments, import SCML files, and reuse segments from other SCML files.
 
 #### Reuse HTML segments
 
@@ -44,7 +45,7 @@ SCML html segments are enclosed in square braces as such:
 [html]
 
 ```
-This is a simple annonymous HTML segment that can't be reused. To create a names segment that can be reused, the syntax is as thus
+This is a simple anonymous HTML segment that can't be reused. To create a named segment that can be reused, the syntax is as thus:
 
 ```
 [html segment_1]
@@ -53,10 +54,11 @@ This is a simple annonymous HTML segment that can't be reused. To create a names
 [html]
 
 ```
-Note: Segment naming follow the protocol for variable naming.
+where `segment_1` is the name. 
+Note: Segment naming follows the same protocol as variable naming.
 
 To reuse a segment, simply use the syntax in[segment_name]. Let's take the example above:
-Presuming I have an annonymous segment and I wish to reuse segment_1 in it
+Presuming I have an anonymous segment and I wish to reuse segment_1 in it
 
 ```
 [html]
@@ -80,7 +82,7 @@ The transpiled HTML content would be
 <p>are you ready to go</p>
 
 ```
- Go ahead and try it on your own. :relaxed: Be careful not to leave extra spaces when importing a segment eg in[ segment_1], in [segment_1], would be ignored by the scml transpiler.
+Go ahead and try it on your own. :relaxed: Be careful not to leave extra spaces when importing a segment eg in[ segment_1], in [segment_1], would be ignored by the scml transpiler.
 
  With SCML, you can also nest import. Take the following example:
 
@@ -88,7 +90,6 @@ The transpiled HTML content would be
 [html seg_1]
 <div>Hi</div>
 [html]
-
 
 [html seg_2]
 <p>hi dear</p>
@@ -102,16 +103,18 @@ in[seg_2]
 
  ```
 
- Notice that seg_2 imports seg_1 but the final segment does not directly call seg_1. But because the annonymous segment calls seg_2 which calls seg_1, it would import seg_1 along with it. And this can go on 50 layers deep :scream:
+
+Notice that seg_2 imports seg_1 but the final segment does not directly call seg_1. But because the anonymous segment calls seg_2 which calls seg_1, it would import seg_1 along with it. And this can go on 20 layers deep :scream:
 
 Note: Avoid importing segments in itself.
 
  #### Import SCML files and reuse segments from other files
 
-SCML also allow you reuse other SCML files. For example instead of rewriting headers and footers for every HTML files, You can easily create an SCML header and footer file, then import it to be used in your current file using the syntax inFile[path_to_scml]. Sweet right :grin:
 
-Let's look at example usage.
-create a file called **header.scml** and add the following content to it
+SCML also allows you reuse other SCML files. Instead of rewriting headers and footers for every HTML files, you can easily create an SCML header and footer file, then import it to be used in your current file using the syntax inFile[path_to_scml]. Sweet right? :grin:
+
+Let's look at an example.
+Create a file called **header.scml** and add the following content to it
 
 ```
 [html]
@@ -128,7 +131,7 @@ Now create a footer file called **footer.scml** and add the following content
 
 ```
 
-Now filnally create create a file called **file.scml** and add the following content
+Now finally create create a file called **file.scml** and add the following content
 
 ```
 inFile[header.scml]
@@ -138,7 +141,7 @@ inFile[header.scml]
 inFile[footer.scml]
 ```
 
-With would replace the inFile with the content of the file when you run the command 
+This would replace the inFile with the content of the file when you run the command 
 
 ```
 scml file.scml app
@@ -187,7 +190,7 @@ inFile[file1.scml]
 inFile[file2.scml]
 ```
 
-Notice that file 1 is imported in file 2 while file 2 is imported in file 3. When File 3 is transpiled, it would contain the contents of file 1 and file 2 becuase it is dependent on file 2 which is dependent on file 1. And of course you can reuse segments in either file 2 or file 1 from file 3.
+Notice that file 1 is imported in file 2 while file 2 is imported in file 3. When File 3 is transpiled, it would contain the contents of file 1 and file 2 because it is dependent on file 2 which is dependent on file 1. And of course you can reuse segments in either file 2 or file 1 from file 3.
 
 #### Comments
 
@@ -204,9 +207,17 @@ Note: Avoid using extra spaces when importing files eg: inFile[ file.scml], inFi
 
 ## JS PROCESSING
 
-SCML also has some helper functions that transpile to your regular javascript. But don't be afraid, this syntax helpers also feel like regulr HTML :grin:
+SCML also has some helper functions that transpile to your regular javascript. But don't be afraid, this syntax helpers also feel like regular HTML :grin:
 
-**Please note that when using JS helper functions the following syntax structure is to be followed <tag id="id_here" heler_func> Every tag that uses JS helper function must have an ID and the helper function should come right after the ID. eg <p id="tag1" append="Let's go there!!!"></p> If you wish to assign class or extra attribues to the tag, it should be added after the helper func eg <p id="tag1" append="Let's go there!!!" class="class_one"></p> and be sure to use the protocol for naming variable when naming ID because in some cases, some ID would be used as variable names. Improperly formatted syntax would be ignored. Also note that not more than one helper js function should be used per tag else only the first helper function would be used and the rest ignored. And finally avoid reusing segments that contain helper functions since ID is supposed to be unique to a tag**
+
+**Please note that when using JS helper functions the following syntax structure is to be followed 
+`<tag id="id_here" helper_func>`
+Every tag that uses JS helper function must have an ID and the helper function should come right after the ID. eg 
+`<p id="tag1" append="Let's go there!!!"></p>` 
+If you wish to assign class or extra attribues to the tag, it should be added after the helper func eg 
+`<p id="tag1" append="Let's go there!!!" class="class_one"></p>` 
+and be sure to use the protocol for naming variables when naming ID because in some cases, some ID would be used as variable names. Improperly formatted syntax would be ignored. Also note that not more than one helper js function should be used per tag else, only the first helper function would be used and the rest ignored. 
+And finally, avoid reusing segments that contain helper functions since reusing replicates the ID again and ID has to be unique to a tag in HTML**
 
 
 
@@ -224,7 +235,7 @@ This allows you to get the content of a tag:
 ```
 <tag id="id" innerHTML=var1>get this content</tag>
 ```
-This would get the content of the tag and assign them to the variable name var1 we decleard above
+This would get the content of the tag and assign them to the variable name var1 we decleard above.
 
 #### Append text
 To append text to a particular html tag, use the following syntax:
@@ -260,7 +271,12 @@ This would disable this form input. It could also be used for button, textarea, 
 You can also write you JS expresion that would be run with an event listener inside your SCML script
 
 ```
-<button id="id" click={console.log("hi"); let c=500; console.log(c);}></button>
+<button id="id" 
+	click={ console.log("hi"); 
+		let c=500; 
+		console.log(c);}>
+	       }
+</button>
 ```
 This would run the js expression with the cick event listener. Other supported  event listerners include: click, abort, change, animationstart, canplay, copy, dbclick, drag, drop, fullscreenchange, hashchange, input, keydown, keypress, keyup, message, mousedown, mousemove, offline, online, pagehide, paste, pause, play, playing, scroll, search, seeking, seeked, select, volumechange
 
@@ -283,8 +299,8 @@ Modify visibility of a tag:
 ```
 Other options other than hidden include: collapse, visible, initial, inherit
 
-#### Formate Date
-To formate a date inbetween a tag to dd/mm/yyyy format
+#### Format Date
+To format a date in-between a tag to dd/mm/yyyy format
 
 ```
 <p id="id" formatDate=dd/mm/yyyy>2020-06-10T17:47:29.156Z</p>
@@ -315,7 +331,7 @@ To reverse the string in a html tag:
 ```
 
 #### Shorten number
-To shorten numbers from 1,000 to 1K or 1,000,000 to 1M:
+To shorten numbers from 1000 to 1K or 1000000 to 1M:
 
 ```
 <p id="id" shortenNum>10000</p>
@@ -338,11 +354,12 @@ To submit a form input to an endpoint:
 <button id="mybut" submitForm[https://submit.com]=myForm>click</button>
 </form>
 ```
-notice in the button tag we did *id="mybut" submitForm[https://submit.com]=myForm* we pass an id to the button, followed by submitForm[https://submit.com] which contains the url you wish to submit to and after that we input the form id which in this case is myForm.
+
+notice in the button tag, we did *id="mybut" submitForm[https://submit.com]=myForm*. We pass an id to the button, followed by submitForm[https://submit.com] which contains the submit url, followed by the id of the form we want to submit.
 
 #### Share link
 To create a share link to social media (this is only used with the a tag):
-This is to share the defulat page url
+This is to share the default page url
 
 ```
 <a id="id" shareDefault="facebook">facebook<a>
@@ -360,9 +377,9 @@ Other social media that can be used apart from facebook include: twitter, linked
 To create a click to copy button:
 ```
 <p id="copy_me">i want to copy this</p>
-<button id="id" copyArea=copy_me>click<.button>
+<button id="id" copyArea=copy_me>click</button>
 ```
-Pass in the id of the area you wish to copy in the cutton. And it would convert it to a click to copy button
+Pass in the id of the area you wish to copy to the button. And it would convert it to a click to copy button.
 
 #### Author
 Oragbakosi Valentine
