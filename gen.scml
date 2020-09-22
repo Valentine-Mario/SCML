@@ -1,0 +1,17 @@
+[html one]
+<p>hi: {name}</p>
+i said hello
+[html]
+
+[html two]
+<p>Age:{age}</p>
+<p>title:{title}</p>
+[html]
+
+[html]
+in[one:[name="kenneth"]]
+in[two:[age="34" title="chief"]]
+in[one:[name="val"]]
+[html]
+
+in[one:[name="ken"]]

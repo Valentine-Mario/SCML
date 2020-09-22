@@ -63,5 +63,9 @@ inFile[head.scml]
 <div>
 <p id="to_copy">copy me</p>
 <button id="copy_me" copyArea=to_copy>copy</button>
+in[five:[name="val house" age="34" date="23/34/2020"]]
+in[three:[name="kin" age="44" date="23/34/2020"]]
+
 </div>
+in[one]
 [html]

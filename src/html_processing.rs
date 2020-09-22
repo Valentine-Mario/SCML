@@ -41,35 +41,50 @@ pub mod process_html{
         tmp
     }
 
-    // pub fn replace_variable_parameter(scml_string:&str, scml_hash:HashMap<String, &str>)->String{
-    //     let mut tmp=String::from(scml_string);
-    //     let mut html_id = HashMap::new();
+    pub fn replace_variable_parameter(scml_string:&str, scml_hash:&HashMap<String, String>)->String{
+        let mut tmp=String::from(scml_string);
 
-    //     for (key, mut value) in scml_hash{
-    //         let string_target=format!(r#"in\[{}\s*?:\s*?\[(\w+=\s*?["|']\s*?[[:alnum:]]*[[:punct:]]*\s*?["|']\s*?)\]+?\s*?\]"#, key);
-    //         let string_regex=Regex::new(&string_target).unwrap();
-    //         for val in string_regex.captures_iter(scml_string){
+       // for _i in 1..50{
+            for (key, value) in scml_hash{
+                //get hash conten
+                let mut key_content= value.to_string();
+    
+                //in[seg_name:[name="value"]]
+                let string_target=format!(r#"in\[{}\s*?:\s*?(\[\w+=\s*?["|']\s*?.+?\s*?["|']\s*?\]+?)\s*?\]"#, key);
+                let string_regex=Regex::new(&string_target).unwrap();
+                
+                
+                    let generic_hash=generate_generic_hash(&scml_string, &key);
+                    for(generic_hash_key, generic_hash_value) in &generic_hash{
+                      
+                        let key=format!(r#"{{{}}}"#, generic_hash_key);
 
-    //             for val2 in Regex::new(r#"\s*?(\w+)\s*?=["|']\s*?(.*)["|'],??"#).unwrap().captures_iter(val.get(1).unwrap().as_str()){
-    //                 if Regex::new(r#"\s*?(\w+)\s*?=["|']\s*?(.*)["|']"#).unwrap().is_match(val.get(1).unwrap().as_str()){
+                        key_content=key_content.replace(&key, &generic_hash_value);
+                       
+                    }  
+                    tmp=string_regex.replace(&tmp, key_content.as_str()).to_string();
+        }  
+   //     }
+          
+    tmp
+    }
 
-    //                 html_id.insert(String::from(val2.get(1).unwrap().as_str()), val2.get(2).unwrap().as_str());
-    //                 }
-    //             }
+    fn generate_generic_hash(scml_string:&str, key:&str)->HashMap<String, String>{
+        let mut generic_hash = HashMap::new();
 
-    //             let mut new_val=String::from(value); 
+        let string_target=format!(r#"in\[{}\s*?:\s*?(\[\w+=\s*?["|']\s*?.+?\s*?["|']\s*?\]+?)\s*?\]"#, key);
+            let string_regex=Regex::new(&string_target).unwrap();
 
-    //             for (key2, value2) in &html_id{
-    //                 let var_format=format!("{{{{{}}}}}", key2);
-            
-    //                 new_val= value.replace(&var_format, &value2);
-    //             }
-    //             let string_litral=format!("in[{}:[{}]]", key, val.get(1).unwrap().as_str());
-    //             tmp=tmp.replace(&string_litral, &new_val);
-    //         }  
-    // }      
-    // tmp
-    // }
+            let variables=format!(r#"(\w+)=\s*?["|']\s*?(.+?)\s*?["|']\s*?"#);
+            let string_variables=Regex::new(&variables).unwrap();
+
+            for val in string_regex.captures_iter(scml_string){
+                for val2 in string_variables.captures_iter(val.get(1).unwrap().as_str()){
+                    generic_hash.insert(String::from(val2.get(1).unwrap().as_str()), String::from(val2.get(2).unwrap().as_str()));
+                }
+            }
+        generic_hash
+    }
 
     pub fn generate_scml_hash(value:&str)->HashMap<String, String>{
         let re= Regex::new(r"\[html (\w+)\]\s*?(.+?)\s*?\[html\]").unwrap();

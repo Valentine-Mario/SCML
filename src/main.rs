@@ -28,6 +28,8 @@ fn main() {
    let hash_value=process_html::generate_scml_hash(&file_content);
 
    let final_string=process_html::replace_variable(&file_content, &hash_value);
+   let generaic_seg=process_html::replace_variable_parameter(&file_content, &hash_value);
+   println!("{}", generaic_seg);
 
     let vector=process_js::process_innerjs(&file_content);
     if vector.len()>0 {
