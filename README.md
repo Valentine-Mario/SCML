@@ -5,7 +5,7 @@ Scripting Markup Language is a custom easy to use markup language with HTML-like
 
 The idea of SCML was to give simple markup extra features, that anyone can easily get started with and get a web page running with little knowledge of JS. It allows you to write less and get more! It is written entirely in the Rust programming language.
 
-To download the binary for the cli [click](https://github.com/Valentine-Mario/SCML/releases/tag/1.0.0)
+To download the binary for the cli [click](https://github.com/Valentine-Mario/SCML/releases/tag/1.1.0)
 
 - For Linux users: Place the binary in your **/usr/bin** or **/usr/local/bin** directory to make the CLI command globally accessible 
 - You might need to run the chmod command first **chmod +x scml**
@@ -111,7 +111,6 @@ Note: Avoid importing segments in itself.
  #### Import SCML files and reuse segments from other files
 
 
-
 SCML also allows you reuse other SCML files. Instead of rewriting headers and footers for every HTML files, you can easily create an SCML header and footer file, then import it to be used in your current file using the syntax inFile[path_to_scml]. Sweet right? :grin:
 
 
@@ -197,17 +196,39 @@ Notice that file 1 is imported in file 2 while file 2 is imported in file 3. Whe
 
 #### Comments
 
-Adding comments is pretty simple. To add a comment to your SCML code, just start the line with # to comment out a particular line
+Adding comments is pretty simple. To add a comment to your SCML code, just start the line with "####" to comment out a particular line
 
 ```
 [html ind1]
-#this is a comment
+####this is a comment
 [html]
 ```
 Commented sections would not be included in the transpiled HTML
 
 
 Note: Avoid using extra spaces when importing files eg: inFile[ file.scml], inFile [file.scml] would be ignored.
+
+#### Generic segments
+
+SCML also supports generic segments. This allows you to create a segment template and call it with the parameter values eg:
+
+```
+[html seg_1]
+<p>My name is {{name}}</p>
+<p>I am {{age}} years old</p>
+[html]
+
+in[seg_1:[name="valentine" age="50"]]
+```
+
+This would replace where you called the segment with the following value
+
+```
+<p>My name is valentine</p>
+<p>I am 50 years old</p>
+
+```
+Note that after compiling, the generic segment template is deleted
 
 ## JS PROCESSING
 

@@ -20,7 +20,7 @@ fn main() {
         process::exit(1)
     });
     println!("processing html");
-    let comment_re = Regex::new(r"(?m)#.*\n").unwrap();
+    let comment_re = Regex::new(r"(?m)####.*\n").unwrap();
    let file_content = comment_re.replace_all(&file_content, "\n\n");
    
      let file_content_from_another_file=process_html::replace_file(&file_content);
@@ -29,8 +29,11 @@ fn main() {
 
    let final_string=process_html::replace_variable(&file_content, &hash_value);
 
-   let generaic_seg=process_html::replace_variable_parameter(&final_string, &hash_value);
+   let mut generaic_seg=process_html::replace_variable_parameter(&final_string, &hash_value);
 
+   for _i in 0..10{
+    generaic_seg=process_html::replace_variable_parameter(&generaic_seg, &hash_value);
+   }
     let vector=process_js::process_innerjs(&generaic_seg);
     if vector.len()>0 {
      println!("processing javascript");

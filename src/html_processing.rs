@@ -43,7 +43,7 @@ pub mod process_html{
 
     pub fn replace_variable_parameter(scml_string:&str, scml_hash:&HashMap<String, String>)->String{
         let mut tmp=String::from(scml_string);
-
+       
             for (key, value) in scml_hash{
                 //get hash conten
                 let mut key_content= value.to_string();
@@ -54,16 +54,16 @@ pub mod process_html{
                 
                 let variables=format!(r#"(\w+)=\s*?["|']\s*?(.+?)\s*?["|']\s*?"#);
                 let string_variables=Regex::new(&variables).unwrap();
-
-                for val in string_regex.captures_iter(scml_string){
-                    
-                    for val2 in string_variables.captures_iter(val.get(1).unwrap().as_str()){
+                    for val in string_regex.captures_iter(scml_string){
+                        for val2 in string_variables.captures_iter(val.get(1).unwrap().as_str()){
+                            
+                            let key=format!(r#"{{{{{}}}}}"#, val2.get(1).unwrap().as_str());
+    
+                            key_content=key_content.replace(&key, val2.get(2).unwrap().as_str());
+                        }
                         
-                        let key=format!(r#"{{{{{}}}}}"#, val2.get(1).unwrap().as_str());
-
-                        key_content=key_content.replace(&key, val2.get(2).unwrap().as_str());
                     }
-                }
+                
                 tmp=string_regex.replace(&tmp, key_content.as_str()).to_string();
         }  
           

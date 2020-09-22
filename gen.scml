@@ -1,5 +1,7 @@
 [html onesense]
 <p>hi: {{name}}</p>
+<p>age: {{age}}</p>
+<p>sex: {{sex}}</p>
 i said hello
 [html]
 
@@ -9,9 +11,20 @@ i said hello
 [html]
 
 [html]
-in[onesense:[name="kenneth"]]
 in[twosense:[age="34" title="chief"]]
+in[onesense:[name="kenneth" age="44" sex="male"]]
 [html]
+in[onesense:[name="Val" age="23" sex="male"]]
+in[twosense:[age="54" title="Collect"]]
+
+in[onesense:[name="Valium" age="23" sex="male"]]
+
+in[onesense:[name="Ibe" age="23" sex="male"]]
+
+in[onesense:[name="Craige" age="23" sex="male"]]
+
+in[onesense:[name="Valent" age="23" sex="male"]]
+
 
 inFile[head.scml]
 [html one]
@@ -22,7 +35,7 @@ inFile[head.scml]
 [html]
 
 [html two]
-<p>section two start
+<p>section two start</p>
 <p>This is some text</p>
 <form id="myForm">
 	<input name="email" type="text"/>
@@ -84,3 +97,4 @@ in[three:[name="kin" age="44" date="23/34/2020"]]
 </div>
 in[one]
 [html]
+
