@@ -1,17 +1,86 @@
-[html one]
-<p>hi: {name}</p>
+[html onesense]
+<p>hi: {{name}}</p>
 i said hello
 [html]
 
+[html twosense]
+<p>Age: {{age}}</p>
+<p>title:{{title}}</p>
+[html]
+
+[html]
+in[onesense:[name="kenneth"]]
+in[twosense:[age="34" title="chief"]]
+[html]
+
+inFile[head.scml]
+[html one]
+<p id="start" append="a whole new world" end>hello world</p>
+<span id="some" limit=10>this is some long ass text longer than 10 char</span>
+<input id="user" disable=true>
+<p>--------</p>
+[html]
+
 [html two]
-<p>Age:{age}</p>
-<p>title:{title}</p>
+<p>section two start
+<p>This is some text</p>
+<form id="myForm">
+	<input name="email" type="text"/>
+<button id="mybut" submitForm[https://rocky-mesa-69765.herokuapp.com/email/add]=myForm>click</button>
+</form>
 [html]
 
-[html]
-in[one:[name="kenneth"]]
-in[two:[age="34" title="chief"]]
-in[one:[name="val"]]
+[html three]
+<textarea id="text" disable=true placeholder="some text"></textarea>
+<div id="food" innerHTML=var1>foodie here</div>
+<input id="getter" getValue=var2 type="text" value="my world">
+<button id="but" click={console.log("hi");console.log("zee")}>click</button>
+<p id="num1" formatInt>10000</p>
+<p id="num2" formatFloat>10000.234</p>
 [html]
 
-in[one:[name="ken"]]
+[html four]
+#this is a comment
+<p id="four_head" visibility=visible>text four<p>
+<div id="some_date" formatDate=dd/mm/yyyy>2020-06-10T17:47:29.156Z</div>
+<div id="some_date3" formatDate=mm/dd/yyyy>2020-06-10T17:47:29.156Z</div>
+<div id="some_date4" formatDate=yyyy/mm/dd>2020-06-10T17:47:29.156Z</div>
+<div id="some_date2" formatTimeAgo>2020-06-10T17:47:29.156Z</div>
+<div id="some_date5" formatTimeAgo>2020-06-16T17:47:29.156Z</div>
+[html]
+
+[html five]
+<p id="money"  formatCurrency="dollar">1000</p>
+<p id="money2"  formatCurrency="euro">1000</p>
+<p id="my_sring" reverseString> this is some text fuckers</p>
+<p id="ccc" shortenNum>12000</p>
+<p id="cccd" shortenNum>12000000</p>
+<p id="write"></p>
+<input id="writter" onChange=write type="text">
+<form id="form1">
+<input name="first" type="text"/>
+	<input name="second" type="number"/>
+	<textarea name="third"></textarea>
+</form>
+<form id="form2">
+<input name="first" type="text"/>
+	<input name="second" type="number"/>
+</form>
+<button id="form_getter" getForm=form1>click</form>
+<button id="form_getter2" getForm=form2>click</form>
+<a id="link1" shareDefault="facebook">fb</a>
+<a id="link2" shareDefault="twitter">tw</a>
+<a id="link3" shareCustome[www.google.com]="telegram">tel</a>
+<a id="link4" shareCustome[www.google.com]="whatsapp">wha</a><br/>
+[html]
+
+[html six]
+<div>
+<p id="to_copy">copy me</p>
+<button id="copy_me" copyArea=to_copy>copy</button>
+in[five:[name="val house" age="34" date="23/34/2020"]]
+in[three:[name="kin" age="44" date="23/34/2020"]]
+
+</div>
+in[one]
+[html]
